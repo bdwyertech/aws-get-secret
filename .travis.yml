@@ -36,7 +36,7 @@ script:
         gox -os="darwin linux windows" \
             -arch="amd64" \
             -output="release/aws-get-secret_{{.OS}}_{{.Arch}}" \
-            -ldflags "-X main.GitCommit=$TRAVIS_COMMIT -X main.ReleaseVer=$TRAVIS_TAG"
+            -ldflags "-X main.GitCommit=$TRAVIS_COMMIT -X main.ReleaseVer=$TRAVIS_TAG" \
             -verbose ./...;
         find release/* -type f -exec sh -c 'sha256sum {} | cut -f1 -d" " > {}.SHA256SUM' \;
         find release/* -not -name "*.SHA256SUM" -type f -print0 | xargs -0 -n 1 -I '{@}' zip -jm {@}.zip {@}
@@ -45,18 +45,11 @@ script:
 
 deploy:
   provider: releases
-  token:
-    secure: "aRLhF7KudN02WfIOBTEhi7Snmp90Et2w6h4KHmt7pfQveeMYn6EapFrdt7KVg5aW9AQOafKsn0cP4fzMAFG6ToFjInu5F9ARV8Cj4Cf4hCsoHDGU/PkJaJmbAmn6Ea8izMjGqC+jg4scWlHUnNZ/oHhQDJH/ZTFR0Y2Uwdjeft1jWlCHNIQRcX2KiNCc8B7mLzjcdUzeDhxXG7GQH3ifogdiafve8Yus3/H/++6JpRHUaf4S7mv8yJqxK80SlIicR/BUoG0g48v4uh7zIt8xHmgOypneibgqEmiS2escm7rN+bNhz7ixCaQ7dxhksokdJ7M4IlNxM5LPBg8k6schFqSI8JUTdsghLWGBtWA0ZeopIGmphdyZnvaSY74y5MBimZCn7LGMAULTQUMkJYTZoB45yVXqDxV8N0gBdijtADZRAgQIShCXVAoPJWyF3Y5w4PfpN6Fx2vq2Loln7cf6dYi74OBDcM1pl3YJb73eVJv2GzFx3mn1d+MEikphFYa6SSODFJQ50z7yGyJ7398aS3IUe3q//aM2qSYvgoZuS8UVFE7Tdg0ANsvDeq6WnIIsSR4ItD8c3ZtJl3t2lOTqOPqxPqmPASFQRezRGENY+ixOQ3mbXX7WSFkEWyOoOhrDh51YCgKTVbXVt4erm1RMTBRtEkBY4zzjswFgwHWFwFA="
-  file:
-    - release/aws-get-secret_windows_amd64.exe.zip
-    - release/aws-get-secret_windows_amd64.exe.SHA256SUM
-    - release/aws-get-secret_windows_amd64.exe.zip.SHA256SUM
-    - release/aws-get-secret_darwin_amd64
-    - release/aws-get-secret_darwin_amd64.SHA256SUM
-    - release/aws-get-secret_darwin_amd64.zip.SHA256SUM
-    - release/aws-get-secret_linux_amd64
-    - release/aws-get-secret_linux_amd64.SHA256SUM
-    - release/aws-get-secret_linux_amd64.zip.SHA256SUM
+  api_key:
+    secure: hi4LDd0B96Q/wAOsmCjDSF01Q/u9svPJnbYImksp+tHisD1KxXC2QMGZS/jimZFKkqiKoEGTTMYKxUEFfXfHkGlBI9IXSPF4K+f1wX9/6XRHzJQY4B9BOYUCRTnPr3nlLJrqG0C3ReseH3GEgkHs6neCm++HzP7yYGX8GcIjZh6GwzmOn/XGherCIpXByhga7w0QN3IQCnuAUKv1jNEeqfSDzEzACkRwDj8pr2RT15ScJIQ4eEd9wuhRhNzbP2+l+bwIHnbBg/YAVaAiOTQ4KcEcizSYd5w64NS3D+c2v96idpIhBG1OcNyOfQ0XehYweoRKyQP3kiM68+2JCg5YGY6vPMs7i97twDfeBQs1upKK9JmVCrmT3UojoNKnbVqbQSEagsxBHUlZV+Q2KCWGQ4wHOi6z3mxAI7CloiBLbCppyfF6n6BzM/UDDLl+XWlfSKlgkKZ4zXVj4jrm+zmxWOOYX9fbas30sn4vWQ8lpsrblBcTYXoVU1hcBXk82fJXJXrPoMpkJpneQc5375PmOdusSKgzgTSv7lbW2XErzSqRU4R4gYKCGucawCmvMUipP9c4YbtETOCmmVYTpv+vBlyNRvlepYYSWnTesGlbXYtSHRl3q5B+CQvePKgbncMjjtrecX7pgIkC4gTajuW0dHGtVERp8fogofVpyDRvU/M=
+  skip_cleanup: true
+  file_glob: true
+  file: release/*
   on:
     repo: bdwyertech/aws-get-secret
     tags: true
