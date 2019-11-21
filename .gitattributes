@@ -1,0 +1,5 @@
+# Detect text files automatically
+* text=auto
+
+# Tell Linguist about vendor folder
+vendor/* linguist-vendored
