@@ -31,7 +31,7 @@ func (c *EC2Metadata) getToken(duration time.Duration) (tokenOutput, error) {
 	// Swap the unmarshalMetadataHandler with unmarshalTokenHandler on this request.
 	req.Handlers.Unmarshal.Swap(unmarshalMetadataHandlerName, unmarshalTokenHandler)
 
-	ttl := strconv.FormatInt(int64(duration / time.Second),10)
+	ttl := strconv.FormatInt(int64(duration/time.Second), 10)
 	req.HTTPRequest.Header.Set(ttlHeader, ttl)
 
 	err := req.Send()
