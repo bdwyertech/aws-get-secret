@@ -1,9 +1,9 @@
+os: linux
 dist: bionic
 
 language: go
-sudo: false
 
-matrix:
+jobs:
   include:
     - go: 1.13.x
       env:
@@ -45,8 +45,7 @@ script:
 
 deploy:
   provider: releases
-  skip_cleanup: true
-  api_key:
+  token:
     secure: "aRLhF7KudN02WfIOBTEhi7Snmp90Et2w6h4KHmt7pfQveeMYn6EapFrdt7KVg5aW9AQOafKsn0cP4fzMAFG6ToFjInu5F9ARV8Cj4Cf4hCsoHDGU/PkJaJmbAmn6Ea8izMjGqC+jg4scWlHUnNZ/oHhQDJH/ZTFR0Y2Uwdjeft1jWlCHNIQRcX2KiNCc8B7mLzjcdUzeDhxXG7GQH3ifogdiafve8Yus3/H/++6JpRHUaf4S7mv8yJqxK80SlIicR/BUoG0g48v4uh7zIt8xHmgOypneibgqEmiS2escm7rN+bNhz7ixCaQ7dxhksokdJ7M4IlNxM5LPBg8k6schFqSI8JUTdsghLWGBtWA0ZeopIGmphdyZnvaSY74y5MBimZCn7LGMAULTQUMkJYTZoB45yVXqDxV8N0gBdijtADZRAgQIShCXVAoPJWyF3Y5w4PfpN6Fx2vq2Loln7cf6dYi74OBDcM1pl3YJb73eVJv2GzFx3mn1d+MEikphFYa6SSODFJQ50z7yGyJ7398aS3IUe3q//aM2qSYvgoZuS8UVFE7Tdg0ANsvDeq6WnIIsSR4ItD8c3ZtJl3t2lOTqOPqxPqmPASFQRezRGENY+ixOQ3mbXX7WSFkEWyOoOhrDh51YCgKTVbXVt4erm1RMTBRtEkBY4zzjswFgwHWFwFA="
   file:
     - release/aws-get-secret_windows_amd64.exe.zip
