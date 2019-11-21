@@ -37,7 +37,7 @@ type ArgT struct {
 	Region          string `cli:"region" usage:"AWS Region" dft:"$AWS_REGION"`
 	RoleARN         string `cli:"r,role-arn" usage:"The Role ARN to assume to retrieve the parameter"`
 	RoleSessionName string `cli:"session-name" usage:"The Session Name to use during the AssumeRole operation"`
-	ExternalID      string `cli:"e,external-id" usage"The External ID to use during the AssumeRole operation"`
+	ExternalID      string `cli:"e,external-id" usage:"The External ID to use during the AssumeRole operation"`
 	Version         bool   `cli:"v, version" usage:"Display the version of this utility"`
 }
 
