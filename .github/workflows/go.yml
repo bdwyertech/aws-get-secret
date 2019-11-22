@@ -29,13 +29,14 @@ jobs:
           go test -v -race $(go list ./... | grep -v /vendor/)
 
       - name: Build
+        env:
+          CGO_ENABLED: 0
+          GOFLAGS: '-mod=vendor'
         run: | # Only build binaries from the supported Go version
           apt-get update && apt-get install -y zip
-          go get -u github.com/mitchellh/gox
+          GOFLAGS='' go get -u github.com/mitchellh/gox
           ARTIFACT='true'
           if [ "${ARTIFACT}" = "true" ]; then
-            CGO_ENABLED=0
-            GOFLAGS=-mod=vendor
             gox -os="darwin linux windows" \
                 -arch="amd64" \
                 -output="release/aws-get-secret_{{.OS}}_{{.Arch}}" \
