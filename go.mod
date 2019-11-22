@@ -1,4 +1,4 @@
-module github.com/bdwyertech/aws-get-secret
+module aws-get-secret
 
 go 1.13
 
