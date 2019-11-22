@@ -29,4 +29,29 @@ jobs:
       run: go test -v -race ./...
 
     - name: Build
-      run: go build -v .
+      run: | # Only build binaries from the supported Go version
+        # add executables installed with go get to PATH
+        # https://github.com/actions/setup-go/issues/14
+        export PATH=${PATH}:`go env GOPATH`/bin
+        go get -u github.com/mitchellh/gox
+        ARTIFACT='true'
+        if [ "${ARTIFACT}" = "true" ]; then
+          CGO_ENABLED=0
+          GOFLAGS=-mod=vendor
+          gox -os="darwin linux windows" \
+              -arch="amd64" \
+              -output="release/aws-get-secret_{{.OS}}_{{.Arch}}" \
+              -ldflags "-X main.GitCommit=$TRAVIS_COMMIT -X main.ReleaseVer=$TRAVIS_TAG" \
+              -verbose ./...;
+          find release/* -type f -exec sh -c 'sha256sum {} | cut -f1 -d" " > {}.SHA256SUM' \;
+          find release/* -not -name "*.SHA256SUM" -type f -print0 | xargs -0 -n 1 -I '{@}' zip -jm {@}.zip {@}
+          find release/* -type f -not -name "*.SHA256SUM" -exec sh -c 'sha256sum {} | cut -f1 -d" " > {}.SHA256SUM' \;
+        fi
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        # Artifact name
+        name: release
+        # Directory containing files to upload
+        path: release/*
