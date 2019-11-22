@@ -91,13 +91,12 @@ func Run(ctx *cli.Context) (err error) {
 		if len(resource) == 2 {
 			prm = resource[1]
 		} else {
-			fmt.Println(resource)
-			log.Fatal("ERROR: Bad Parameter Resource Path")
+			return fmt.Errorf("ERROR: Bad Parameter Resource Path: %s", resource)
 		}
 	case 1:
 		break
 	default:
-		log.Fatal("ERROR: Invalid Parameter ARN or Path!")
+		return fmt.Errorf("ERROR: Invalid Parameter ARN or Path!")
 	}
 
 	// AWS Session
