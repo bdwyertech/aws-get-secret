@@ -1,4 +1,5 @@
 # aws-get-secret
+[![Build Status](https://github.com/bdwyertech/aws-get-secret/workflows/Go/badge.svg?branch=master)](https://github.com/bdwyertech/aws-get-secret/actions?query=workflow%3AGo+branch%3Amaster)
 [![](https://images.microbadger.com/badges/image/bdwyertech/aws-get-secret.svg)](https://microbadger.com/images/bdwyertech/aws-get-secret)
 [![](https://images.microbadger.com/badges/version/bdwyertech/aws-get-secret.svg)](https://microbadger.com/images/bdwyertech/aws-get-secret)
 
