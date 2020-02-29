@@ -1,10 +1,10 @@
-FROM golang:1.13-alpine as aws-get-secret
+FROM golang:1.14-alpine as aws-get-secret
 WORKDIR /go/src/github.com/bdwyertech/aws-get-secret
 COPY . .
 ARG VCS_REF
 RUN CGO_ENABLED=0 GOFLAGS='-mod=vendor' go build -ldflags="-X main.GitCommit=$VCS_REF -X main.ReleaseVer=docker" .
 
-FROM library/alpine:3.10
+FROM library/alpine:3.11
 COPY --from=aws-get-secret /go/src/github.com/bdwyertech/aws-get-secret/aws-get-secret /usr/local/bin/
 
 ARG BUILD_DATE
