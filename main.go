@@ -17,8 +17,7 @@ import (
 	"github.com/mkideal/cli"
 )
 
-var GitCommit string
-var ReleaseVer string
+var GitCommit, ReleaseVer, ReleaseDate string
 
 func showVersion() {
 	if GitCommit == "" {
@@ -27,7 +26,9 @@ func showVersion() {
 	if ReleaseVer == "" {
 		ReleaseVer = "DEVELOPMENT"
 	}
-	fmt.Printf("version: %s\ncommit: %s", ReleaseVer, GitCommit)
+	fmt.Println("version:", ReleaseVer)
+	fmt.Println("commit:", GitCommit)
+	fmt.Println("date:", ReleaseDate)
 }
 
 type ArgT struct {
