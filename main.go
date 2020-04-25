@@ -101,7 +101,8 @@ func Run(ctx *cli.Context) (err error) {
 
 	// AWS Session
 	sess_opts := session.Options{
-		Config: *aws.NewConfig().WithRegion(region),
+		Config: *aws.NewConfig().WithRegion(region).
+			WithCredentialsChainVerboseErrors(true),
 	}
 	if argv.Profile != "" {
 		sess_opts.Profile = argv.Profile
