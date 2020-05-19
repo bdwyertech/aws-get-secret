@@ -17,20 +17,6 @@ import (
 	"github.com/mkideal/cli"
 )
 
-var GitCommit, ReleaseVer, ReleaseDate string
-
-func showVersion() {
-	if GitCommit == "" {
-		GitCommit = "DEVELOPMENT"
-	}
-	if ReleaseVer == "" {
-		ReleaseVer = "DEVELOPMENT"
-	}
-	fmt.Println("version:", ReleaseVer)
-	fmt.Println("commit:", GitCommit)
-	fmt.Println("date:", ReleaseDate)
-}
-
 type ArgT struct {
 	cli.Helper
 	Parameter       string `cli:"p,parameter" usage:"The path to the parameter in AWS Parameter Store"`
