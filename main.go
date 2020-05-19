@@ -54,7 +54,7 @@ func (argv *ArgT) Validate(ctx *cli.Context) (err error) {
 		if len(ctx.Args()) > 0 {
 			argv.Parameter = ctx.Args()[0]
 		} else {
-			err = fmt.Errorf("%s is a required argument!", ctx.Color().Yellow("Parameter"))
+			err = fmt.Errorf("%s is a required argument", ctx.Color().Yellow("Parameter"))
 			return
 		}
 	}
@@ -84,7 +84,6 @@ func Run(ctx *cli.Context) (err error) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		prm = strings.Split(prm, ":parameter")[1]
 		if prm_arn.Region != "" {
 			region = prm_arn.Region
 		}
@@ -97,7 +96,7 @@ func Run(ctx *cli.Context) (err error) {
 	case 1:
 		break
 	default:
-		return fmt.Errorf("ERROR: Invalid Parameter ARN or Path!")
+		return fmt.Errorf("ERROR: Invalid Parameter ARN or Path")
 	}
 
 	// AWS Session
@@ -110,7 +109,7 @@ func Run(ctx *cli.Context) (err error) {
 	}
 	sess := session.Must(session.NewSessionWithOptions(sess_opts))
 
-	creds := &credentials.Credentials{}
+	var creds *credentials.Credentials
 	if argv.RoleARN != "" {
 		// Get AssumeRole Credentials
 		creds = stscreds.NewCredentials(sess, argv.RoleARN, func(p *stscreds.AssumeRoleProvider) {
