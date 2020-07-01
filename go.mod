@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	github.com/Bowery/prompt v0.0.0-20190916142128-fa8279994f75 // indirect
-	github.com/aws/aws-sdk-go v1.31.0
+	github.com/aws/aws-sdk-go v1.32.13
 	github.com/labstack/gommon v0.3.0 // indirect
 	github.com/mattn/go-colorable v0.1.6 // indirect
 	github.com/mkideal/cli v0.0.5
