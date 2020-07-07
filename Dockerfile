@@ -4,7 +4,7 @@ COPY . .
 ARG VCS_REF
 RUN CGO_ENABLED=0 GOFLAGS='-mod=vendor' go build -ldflags="-X main.GitCommit=$VCS_REF -X main.ReleaseVer=docker" .
 
-FROM library/alpine:3.11
+FROM library/alpine:latest
 COPY --from=aws-get-secret /go/src/github.com/bdwyertech/aws-get-secret/aws-get-secret /usr/local/bin/
 
 ARG BUILD_DATE
