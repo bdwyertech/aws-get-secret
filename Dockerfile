@@ -1,4 +1,4 @@
-FROM golang:1.14-alpine as aws-get-secret
+FROM golang:1.15-alpine as aws-get-secret
 WORKDIR /go/src/github.com/bdwyertech/aws-get-secret
 COPY . .
 ARG VCS_REF
