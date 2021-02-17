@@ -1,9 +1,8 @@
 module aws-get-secret
 
-go 1.15
+go 1.16
 
 require (
-	github.com/aws/aws-sdk-go v1.34.6
-	github.com/kr/pretty v0.2.1 // indirect
-	github.com/mkideal/cli v0.2.2
+	github.com/aws/aws-sdk-go v1.37.13
+	github.com/mkideal/cli v0.2.5
 )
