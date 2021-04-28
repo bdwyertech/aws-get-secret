@@ -1,18 +1,19 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/arn"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/aws/arn"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials/stscreds"
+	"github.com/aws/aws-sdk-go-v2/service/ssm"
+	"github.com/aws/aws-sdk-go-v2/service/sts"
 
 	"github.com/mkideal/cli"
 )
@@ -86,19 +87,23 @@ func Run(ctx *cli.Context) (err error) {
 	}
 
 	// AWS Session
-	sess_opts := session.Options{
-		Config: *aws.NewConfig().WithRegion(region).
-			WithCredentialsChainVerboseErrors(true),
+	cfgOpts := []func(*config.LoadOptions) error{
+		config.WithRegion(region),
 	}
 	if argv.Profile != "" {
-		sess_opts.Profile = argv.Profile
+		cfgOpts = append(cfgOpts, config.WithSharedConfigProfile(argv.Profile))
 	}
-	sess := session.Must(session.NewSessionWithOptions(sess_opts))
 
-	var creds *credentials.Credentials
+	cfg, err := config.LoadDefaultConfig(context.TODO(), cfgOpts...)
+	if err != nil {
+		panic(err)
+	}
+
 	if argv.RoleARN != "" {
 		// Get AssumeRole Credentials
-		creds = stscreds.NewCredentials(sess, argv.RoleARN, func(p *stscreds.AssumeRoleProvider) {
+		client := sts.NewFromConfig(cfg)
+
+		creds := stscreds.NewAssumeRoleProvider(client, argv.RoleARN, func(p *stscreds.AssumeRoleOptions) {
 			if argv.RoleSessionName != "" {
 				p.RoleSessionName = argv.RoleSessionName
 			} else {
@@ -108,18 +113,14 @@ func Run(ctx *cli.Context) (err error) {
 				p.ExternalID = aws.String(argv.ExternalID)
 			}
 		})
-	} else {
-		creds = sess.Config.Credentials
+		cfg.Credentials = aws.NewCredentialsCache(creds)
 	}
 
 	// SSM Client
-	ssmcfg := &aws.Config{
-		Credentials: creds,
-	}
-	ssmclient := ssm.New(sess, ssmcfg)
-	resp, err := ssmclient.GetParameter(&ssm.GetParameterInput{
+	ssmclient := ssm.NewFromConfig(cfg)
+	resp, err := ssmclient.GetParameter(context.TODO(), &ssm.GetParameterInput{
 		Name:           aws.String(prm),
-		WithDecryption: aws.Bool(true),
+		WithDecryption: true,
 	})
 	if err != nil {
 		log.Fatalf("ERROR: ssm.GetParameter:: %s\n%s", prm, err)
