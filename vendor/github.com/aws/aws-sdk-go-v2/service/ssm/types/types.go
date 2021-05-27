@@ -114,6 +114,13 @@ type AssociationDescription struct {
 	// that use an Automation document and target resources by using rate controls.
 	AutomationTargetParameterName *string
 
+	// The names or Amazon Resource Names (ARNs) of the Systems Manager Change Calendar
+	// type documents your associations are gated under. The associations only run when
+	// that Change Calendar is open. For more information, see AWS Systems Manager
+	// Change Calendar
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-change-calendar).
+	CalendarNames []string
+
 	// The severity level that is assigned to the association.
 	ComplianceSeverity AssociationComplianceSeverity
 
@@ -357,6 +364,13 @@ type AssociationVersionInfo struct {
 
 	// The association version.
 	AssociationVersion *string
+
+	// The names or Amazon Resource Names (ARNs) of the Systems Manager Change Calendar
+	// type documents your associations are gated under. The associations for this
+	// version only run when that Change Calendar is open. For more information, see
+	// AWS Systems Manager Change Calendar
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-change-calendar).
+	CalendarNames []string
 
 	// The severity level that is assigned to the association.
 	ComplianceSeverity AssociationComplianceSeverity
@@ -1343,6 +1357,13 @@ type CreateAssociationBatchRequestEntry struct {
 	// that use an Automation document and target resources by using rate controls.
 	AutomationTargetParameterName *string
 
+	// The names or Amazon Resource Names (ARNs) of the Systems Manager Change Calendar
+	// type documents your associations are gated under. The associations only run when
+	// that Change Calendar is open. For more information, see AWS Systems Manager
+	// Change Calendar
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-change-calendar).
+	CalendarNames []string
+
 	// The severity level to assign to the association.
 	ComplianceSeverity AssociationComplianceSeverity
 
@@ -1449,6 +1470,11 @@ type DocumentDescription struct {
 	// A description of the document.
 	Description *string
 
+	// The friendly name of the Systems Manager document. This value can differ for
+	// each version of the document. If you want to update this value, see
+	// UpdateDocument.
+	DisplayName *string
+
 	// The document format, either JSON or YAML.
 	DocumentFormat DocumentFormat
 
@@ -1543,6 +1569,14 @@ type DocumentIdentifier struct {
 
 	// The user in your organization who created the document.
 	Author *string
+
+	// The date the Systems Manager document was created.
+	CreatedDate *time.Time
+
+	// An optional field where you can specify a friendly name for the Systems Manager
+	// document. This value can differ for each version of the document. If you want to
+	// update this value, see UpdateDocument.
+	DisplayName *string
 
 	// The document format, either JSON or YAML.
 	DocumentFormat DocumentFormat
@@ -1754,6 +1788,11 @@ type DocumentVersionInfo struct {
 
 	// The date the document was created.
 	CreatedDate *time.Time
+
+	// The friendly name of the Systems Manager document. This value can differ for
+	// each version of the document. If you want to update this value, see
+	// UpdateDocument.
+	DisplayName *string
 
 	// The document format, either JSON or YAML.
 	DocumentFormat DocumentFormat
@@ -3088,7 +3127,8 @@ type OpsItemEventFilter struct {
 	Values []string
 }
 
-// Summary information about an OpsItem event.
+// Summary information about an OpsItem event or that associated an OpsItem with a
+// related item.
 type OpsItemEventSummary struct {
 
 	// Information about the user or resource that created the OpsItem event.
@@ -3145,6 +3185,57 @@ type OpsItemNotification struct {
 	// The Amazon Resource Name (ARN) of an SNS topic where notifications are sent when
 	// this OpsItem is edited or changed.
 	Arn *string
+}
+
+// Describes a filter for a specific list of related-item resources.
+type OpsItemRelatedItemsFilter struct {
+
+	// The name of the filter key. Supported values include ResourceUri, ResourceType,
+	// or AssociationId.
+	//
+	// This member is required.
+	Key OpsItemRelatedItemsFilterKey
+
+	// The operator used by the filter call. The only supported operator is EQUAL.
+	//
+	// This member is required.
+	Operator OpsItemRelatedItemsFilterOperator
+
+	// The values for the filter.
+	//
+	// This member is required.
+	Values []string
+}
+
+// Summary information about related-item resources for an OpsItem.
+type OpsItemRelatedItemSummary struct {
+
+	// The association ID.
+	AssociationId *string
+
+	// The association type.
+	AssociationType *string
+
+	// Information about the user or resource that created an OpsItem event.
+	CreatedBy *OpsItemIdentity
+
+	// The time the related-item association was created.
+	CreatedTime *time.Time
+
+	// Information about the user or resource that created an OpsItem event.
+	LastModifiedBy *OpsItemIdentity
+
+	// The time the related-item association was last updated.
+	LastModifiedTime *time.Time
+
+	// The OpsItem ID.
+	OpsItemId *string
+
+	// The resource type.
+	ResourceType *string
+
+	// The Amazon Resource Name (ARN) of the related-item resource.
+	ResourceUri *string
 }
 
 // A count of OpsItems.
