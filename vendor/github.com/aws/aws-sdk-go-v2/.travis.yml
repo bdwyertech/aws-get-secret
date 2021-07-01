@@ -23,6 +23,9 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install make; fi
   - (cd /tmp/; go get golang.org/x/lint/golint)
 
+env:
+  - EACHMODULE_CONCURRENCY=4
+
 script:
-  - make go test -v ./...;
+  - make ci-test-no-generate;
 
