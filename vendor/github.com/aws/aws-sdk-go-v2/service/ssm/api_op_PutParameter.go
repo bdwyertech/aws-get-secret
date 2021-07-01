@@ -17,7 +17,7 @@ func (c *Client) PutParameter(ctx context.Context, params *PutParameterInput, op
 		params = &PutParameterInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "PutParameter", params, optFns, addOperationPutParameterMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "PutParameter", params, optFns, c.addOperationPutParameterMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ type PutParameterInput struct {
 	// format, such as ami-12345abcdeEXAMPLE, and that the specified AMI is available
 	// in your AWS account. For more information, see Native parameter support for
 	// Amazon Machine Image IDs
-	// (http://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-store-ec2-aliases.html)
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/parameter-store-ec2-aliases.html)
 	// in the AWS Systems Manager User Guide.
 	DataType *string
 
@@ -240,7 +240,7 @@ type PutParameterOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationPutParameterMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationPutParameterMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpPutParameter{}, middleware.After)
 	if err != nil {
 		return err

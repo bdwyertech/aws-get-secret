@@ -27,7 +27,7 @@ func (c *Client) UpdateServiceSetting(ctx context.Context, params *UpdateService
 		params = &UpdateServiceSettingInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "UpdateServiceSetting", params, optFns, addOperationUpdateServiceSettingMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "UpdateServiceSetting", params, optFns, c.addOperationUpdateServiceSettingMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -49,6 +49,9 @@ type UpdateServiceSettingInput struct {
 	//
 	// *
 	// /ssm/automation/customer-script-log-group-name
+	//
+	// *
+	// /ssm/documents/console/public-sharing-permission
 	//
 	// *
 	// /ssm/parameter-store/default-parameter-tier
@@ -78,7 +81,9 @@ type UpdateServiceSettingInput struct {
 	// or false. For the /ssm/automation/customer-script-log-destination setting ID,
 	// the setting value can be CloudWatch. For the
 	// /ssm/automation/customer-script-log-group-name setting ID, the setting value can
-	// be the name of a CloudWatch Logs log group.
+	// be the name of a CloudWatch Logs log group. For the
+	// /ssm/documents/console/public-sharing-permission setting ID, the setting value
+	// can be Enable or Disable.
 	//
 	// This member is required.
 	SettingValue *string
@@ -90,7 +95,7 @@ type UpdateServiceSettingOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationUpdateServiceSettingMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationUpdateServiceSettingMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpUpdateServiceSetting{}, middleware.After)
 	if err != nil {
 		return err

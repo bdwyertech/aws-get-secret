@@ -9,6 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/aws/smithy-go/middleware"
 	smithyhttp "github.com/aws/smithy-go/transport/http"
+	"time"
 )
 
 // Gets the contents of the specified Systems Manager document.
@@ -17,7 +18,7 @@ func (c *Client) GetDocument(ctx context.Context, params *GetDocumentInput, optF
 		params = &GetDocumentInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "GetDocument", params, optFns, addOperationGetDocumentMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "GetDocument", params, optFns, c.addOperationGetDocumentMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -55,6 +56,14 @@ type GetDocumentOutput struct {
 
 	// The contents of the Systems Manager document.
 	Content *string
+
+	// The date the Systems Manager document was created.
+	CreatedDate *time.Time
+
+	// The friendly name of the Systems Manager document. This value can differ for
+	// each version of the document. If you want to update this value, see
+	// UpdateDocument.
+	DisplayName *string
 
 	// The document format, either JSON or YAML.
 	DocumentFormat types.DocumentFormat
@@ -100,7 +109,7 @@ type GetDocumentOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationGetDocumentMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationGetDocumentMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpGetDocument{}, middleware.After)
 	if err != nil {
 		return err

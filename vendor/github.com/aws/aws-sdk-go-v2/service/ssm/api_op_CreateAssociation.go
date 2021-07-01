@@ -27,7 +27,7 @@ func (c *Client) CreateAssociation(ctx context.Context, params *CreateAssociatio
 		params = &CreateAssociationInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "CreateAssociation", params, optFns, addOperationCreateAssociationMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "CreateAssociation", params, optFns, c.addOperationCreateAssociationMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -53,7 +53,7 @@ type CreateAssociationInput struct {
 	// This member is required.
 	Name *string
 
-	// By default, when you create a new associations, the system runs it immediately
+	// By default, when you create a new association, the system runs it immediately
 	// after it is created and then according to the schedule you specified. Specify
 	// this option if you don't want an association to run immediately after you create
 	// it. This parameter is not supported for rate expressions.
@@ -65,6 +65,13 @@ type CreateAssociationInput struct {
 	// Specify the target for the association. This target is required for associations
 	// that use an Automation document and target resources by using rate controls.
 	AutomationTargetParameterName *string
+
+	// The names or Amazon Resource Names (ARNs) of the Systems Manager Change Calendar
+	// type documents you want to gate your associations under. The associations only
+	// run when that Change Calendar is open. For more information, see AWS Systems
+	// Manager Change Calendar
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-change-calendar).
+	CalendarNames []string
 
 	// The severity level to assign to the association.
 	ComplianceSeverity types.AssociationComplianceSeverity
@@ -148,7 +155,7 @@ type CreateAssociationOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationCreateAssociationMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationCreateAssociationMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpCreateAssociation{}, middleware.After)
 	if err != nil {
 		return err

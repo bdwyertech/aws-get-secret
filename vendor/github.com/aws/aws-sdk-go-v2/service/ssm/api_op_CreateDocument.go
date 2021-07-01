@@ -22,7 +22,7 @@ func (c *Client) CreateDocument(ctx context.Context, params *CreateDocumentInput
 		params = &CreateDocumentInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "CreateDocument", params, optFns, addOperationCreateDocumentMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "CreateDocument", params, optFns, c.addOperationCreateDocumentMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -70,6 +70,11 @@ type CreateDocumentInput struct {
 	// document.
 	Attachments []types.AttachmentsSource
 
+	// An optional field where you can specify a friendly name for the Systems Manager
+	// document. This value can differ for each version of the document. You can update
+	// this value at a later time using the UpdateDocument action.
+	DisplayName *string
+
 	// Specify the document format for the request. The document format can be JSON,
 	// YAML, or TEXT. JSON is the default format.
 	DocumentFormat types.DocumentFormat
@@ -108,7 +113,7 @@ type CreateDocumentInput struct {
 	// types of resources. If you don't specify a value, the document can't run on any
 	// resources. For a list of valid resource types, see AWS resource and property
 	// types reference
-	// (http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)
+	// (https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html)
 	// in the AWS CloudFormation User Guide.
 	TargetType *string
 
@@ -127,7 +132,7 @@ type CreateDocumentOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationCreateDocumentMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationCreateDocumentMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpCreateDocument{}, middleware.After)
 	if err != nil {
 		return err

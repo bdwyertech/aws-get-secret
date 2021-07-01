@@ -19,7 +19,7 @@ func (c *Client) DescribeAutomationStepExecutions(ctx context.Context, params *D
 		params = &DescribeAutomationStepExecutionsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeAutomationStepExecutions", params, optFns, addOperationDescribeAutomationStepExecutionsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeAutomationStepExecutions", params, optFns, c.addOperationDescribeAutomationStepExecutionsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -48,8 +48,8 @@ type DescribeAutomationStepExecutionsInput struct {
 	// previous call.)
 	NextToken *string
 
-	// A boolean that indicates whether to list step executions in reverse order by
-	// start time. The default value is 'false'.
+	// Indicates whether to list step executions in reverse order by start time. The
+	// default value is 'false'.
 	ReverseOrder bool
 }
 
@@ -67,7 +67,7 @@ type DescribeAutomationStepExecutionsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeAutomationStepExecutionsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeAutomationStepExecutionsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeAutomationStepExecutions{}, middleware.After)
 	if err != nil {
 		return err

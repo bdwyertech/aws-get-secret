@@ -735,6 +735,7 @@ func (e *InvalidAutomationStatusUpdateException) ErrorFault() smithy.ErrorFault 
 	return smithy.FaultClient
 }
 
+// The specified command ID is not valid. Verify the ID and try again.
 type InvalidCommandId struct {
 	Message *string
 }
@@ -1579,6 +1580,52 @@ func (e *OpsItemNotFoundException) ErrorMessage() string {
 func (e *OpsItemNotFoundException) ErrorCode() string             { return "OpsItemNotFoundException" }
 func (e *OpsItemNotFoundException) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
+// The Amazon Resource Name (ARN) is already associated with the OpsItem.
+type OpsItemRelatedItemAlreadyExistsException struct {
+	Message *string
+
+	ResourceUri *string
+	OpsItemId   *string
+}
+
+func (e *OpsItemRelatedItemAlreadyExistsException) Error() string {
+	return fmt.Sprintf("%s: %s", e.ErrorCode(), e.ErrorMessage())
+}
+func (e *OpsItemRelatedItemAlreadyExistsException) ErrorMessage() string {
+	if e.Message == nil {
+		return ""
+	}
+	return *e.Message
+}
+func (e *OpsItemRelatedItemAlreadyExistsException) ErrorCode() string {
+	return "OpsItemRelatedItemAlreadyExistsException"
+}
+func (e *OpsItemRelatedItemAlreadyExistsException) ErrorFault() smithy.ErrorFault {
+	return smithy.FaultClient
+}
+
+// The association was not found using the parameters you specified in the call.
+// Verify the information and try again.
+type OpsItemRelatedItemAssociationNotFoundException struct {
+	Message *string
+}
+
+func (e *OpsItemRelatedItemAssociationNotFoundException) Error() string {
+	return fmt.Sprintf("%s: %s", e.ErrorCode(), e.ErrorMessage())
+}
+func (e *OpsItemRelatedItemAssociationNotFoundException) ErrorMessage() string {
+	if e.Message == nil {
+		return ""
+	}
+	return *e.Message
+}
+func (e *OpsItemRelatedItemAssociationNotFoundException) ErrorCode() string {
+	return "OpsItemRelatedItemAssociationNotFoundException"
+}
+func (e *OpsItemRelatedItemAssociationNotFoundException) ErrorFault() smithy.ErrorFault {
+	return smithy.FaultClient
+}
+
 // An OpsMetadata object already exists for the selected resource.
 type OpsMetadataAlreadyExistsException struct {
 	Message *string
@@ -1750,9 +1797,9 @@ func (e *ParameterLimitExceeded) ErrorFault() smithy.ErrorFault { return smithy.
 // continue creating new parameters, first move the label from the oldest version
 // of the parameter to a newer one for use in your operations. For information
 // about moving parameter labels, see Move a parameter label (console)
-// (http://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-paramstore-labels.html#sysman-paramstore-labels-console-move)
+// (https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-paramstore-labels.html#sysman-paramstore-labels-console-move)
 // or Move a parameter label (CLI)
-// (http://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-paramstore-labels.html#sysman-paramstore-labels-cli-move)
+// (https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-paramstore-labels.html#sysman-paramstore-labels-cli-move)
 // in the AWS Systems Manager User Guide.
 type ParameterMaxVersionLimitExceeded struct {
 	Message *string
