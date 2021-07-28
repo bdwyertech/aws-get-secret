@@ -1,10 +1,10 @@
-FROM golang:1.15-alpine as aws-get-secret
+FROM golang:1.16-alpine as aws-get-secret
 WORKDIR /go/src/github.com/bdwyertech/aws-get-secret
 COPY . .
 ARG VCS_REF
-RUN CGO_ENABLED=0 GOFLAGS='-mod=vendor' go build -ldflags="-X main.GitCommit=$VCS_REF -X main.ReleaseVer=docker" .
+RUN CGO_ENABLED=0 GOFLAGS='-mod=vendor' go build -ldflags="-X main.GitCommit=$VCS_REF -X main.ReleaseVer=docker" -trimpath .
 
-FROM library/alpine:latest
+FROM library/alpine:3.13
 COPY --from=aws-get-secret /go/src/github.com/bdwyertech/aws-get-secret/aws-get-secret /usr/local/bin/
 
 ARG BUILD_DATE
@@ -21,7 +21,7 @@ LABEL org.opencontainers.image.title="bdwyertech/aws-get-secret" \
       org.label-schema.name="bdwyertech/aws-get-secret" \
       org.label-schema.description="For retrieving a secret from AWS Parameter Store" \
       org.label-schema.url="https://hub.docker.com/r/bdwyertech/aws-get-secret" \
-      org.label-schema.vcs-url="https://github.com/bdwyertech/aws-get-secret.git"\
+      org.label-schema.vcs-url="https://github.com/bdwyertech/aws-get-secret.git" \
       org.label-schema.vcs-ref=$VCS_REF \
       org.label-schema.build-date=$BUILD_DATE
 
