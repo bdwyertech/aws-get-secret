@@ -12,13 +12,13 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists the patch baselines in your AWS account.
+// Lists the patch baselines in your account.
 func (c *Client) DescribePatchBaselines(ctx context.Context, params *DescribePatchBaselinesInput, optFns ...func(*Options)) (*DescribePatchBaselinesOutput, error) {
 	if params == nil {
 		params = &DescribePatchBaselinesInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribePatchBaselines", params, optFns, addOperationDescribePatchBaselinesMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribePatchBaselines", params, optFns, c.addOperationDescribePatchBaselinesMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -30,9 +30,16 @@ func (c *Client) DescribePatchBaselines(ctx context.Context, params *DescribePat
 
 type DescribePatchBaselinesInput struct {
 
-	// Each element in the array is a structure containing: Key: (string, "NAME_PREFIX"
-	// or "OWNER") Value: (array of strings, exactly 1 entry, between 1 and 255
-	// characters)
+	// Each element in the array is a structure containing a key-value pair. Supported
+	// keys for DescribePatchBaselines include the following:
+	//
+	// * NAME_PREFIX Sample
+	// values: AWS- | My-
+	//
+	// * OWNER Sample values: AWS | Self
+	//
+	// * OPERATING_SYSTEM Sample
+	// values: AMAZON_LINUX | SUSE | WINDOWS
 	Filters []types.PatchOrchestratorFilter
 
 	// The maximum number of patch baselines to return (per page).
@@ -56,7 +63,7 @@ type DescribePatchBaselinesOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribePatchBaselinesMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribePatchBaselinesMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribePatchBaselines{}, middleware.After)
 	if err != nil {
 		return err

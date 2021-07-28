@@ -11,15 +11,15 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// If you create a new application in Application Manager, Systems Manager calls
-// this API action to specify information about the new application, including the
-// application type.
+// If you create a new application in Application Manager, Amazon Web Services
+// Systems Manager calls this API operation to specify information about the new
+// application, including the application type.
 func (c *Client) CreateOpsMetadata(ctx context.Context, params *CreateOpsMetadataInput, optFns ...func(*Options)) (*CreateOpsMetadataOutput, error) {
 	if params == nil {
 		params = &CreateOpsMetadataInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "CreateOpsMetadata", params, optFns, addOperationCreateOpsMetadataMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "CreateOpsMetadata", params, optFns, c.addOperationCreateOpsMetadataMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +42,7 @@ type CreateOpsMetadataInput struct {
 	// Optional metadata that you assign to a resource. You can specify a maximum of
 	// five tags for an OpsMetadata object. Tags enable you to categorize a resource in
 	// different ways, such as by purpose, owner, or environment. For example, you
-	// might want to tag an OpsMetadata object to identify an environment or target AWS
+	// might want to tag an OpsMetadata object to identify an environment or target
 	// Region. In this case, you could specify the following key-value pairs:
 	//
 	// *
@@ -62,7 +62,7 @@ type CreateOpsMetadataOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationCreateOpsMetadataMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationCreateOpsMetadataMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpCreateOpsMetadata{}, middleware.After)
 	if err != nil {
 		return err

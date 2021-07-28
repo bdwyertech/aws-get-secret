@@ -15,18 +15,18 @@ import (
 // Describes one or more of your instances, including information about the
 // operating system platform, the version of SSM Agent installed on the instance,
 // instance status, and so on. If you specify one or more instance IDs, it returns
-// information for those instances. If you do not specify instance IDs, it returns
-// information for all your instances. If you specify an instance ID that is not
-// valid or an instance that you do not own, you receive an error. The IamRole
-// field for this API action is the Amazon Identity and Access Management (IAM)
-// role assigned to on-premises instances. This call does not return the IAM role
-// for EC2 instances.
+// information for those instances. If you don't specify instance IDs, it returns
+// information for all your instances. If you specify an instance ID that isn't
+// valid or an instance that you don't own, you receive an error. The IamRole field
+// for this API operation is the Identity and Access Management (IAM) role assigned
+// to on-premises instances. This call doesn't return the IAM role for EC2
+// instances.
 func (c *Client) DescribeInstanceInformation(ctx context.Context, params *DescribeInstanceInformationInput, optFns ...func(*Options)) (*DescribeInstanceInformationOutput, error) {
 	if params == nil {
 		params = &DescribeInstanceInformationInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeInstanceInformation", params, optFns, addOperationDescribeInstanceInformationMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeInstanceInformation", params, optFns, c.addOperationDescribeInstanceInformationMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +71,7 @@ type DescribeInstanceInformationOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeInstanceInformationMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeInstanceInformationMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeInstanceInformation{}, middleware.After)
 	if err != nil {
 		return err

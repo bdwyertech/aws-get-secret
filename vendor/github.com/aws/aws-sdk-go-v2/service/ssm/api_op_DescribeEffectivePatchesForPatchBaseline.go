@@ -13,14 +13,13 @@ import (
 )
 
 // Retrieves the current effective patches (the patch and the approval state) for
-// the specified patch baseline. Note that this API applies only to Windows patch
-// baselines.
+// the specified patch baseline. Applies to patch baselines for Windows only.
 func (c *Client) DescribeEffectivePatchesForPatchBaseline(ctx context.Context, params *DescribeEffectivePatchesForPatchBaselineInput, optFns ...func(*Options)) (*DescribeEffectivePatchesForPatchBaselineOutput, error) {
 	if params == nil {
 		params = &DescribeEffectivePatchesForPatchBaselineInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeEffectivePatchesForPatchBaseline", params, optFns, addOperationDescribeEffectivePatchesForPatchBaselineMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeEffectivePatchesForPatchBaseline", params, optFns, c.addOperationDescribeEffectivePatchesForPatchBaselineMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +57,7 @@ type DescribeEffectivePatchesForPatchBaselineOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeEffectivePatchesForPatchBaselineMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeEffectivePatchesForPatchBaselineMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeEffectivePatchesForPatchBaseline{}, middleware.After)
 	if err != nil {
 		return err

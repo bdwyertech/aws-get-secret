@@ -18,7 +18,7 @@ func (c *Client) GetMaintenanceWindowExecution(ctx context.Context, params *GetM
 		params = &GetMaintenanceWindowExecutionInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "GetMaintenanceWindowExecution", params, optFns, addOperationGetMaintenanceWindowExecutionMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "GetMaintenanceWindowExecution", params, optFns, c.addOperationGetMaintenanceWindowExecutionMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ type GetMaintenanceWindowExecutionOutput struct {
 	// The status of the maintenance window execution.
 	Status types.MaintenanceWindowExecutionStatus
 
-	// The details explaining the Status. Only available for certain status values.
+	// The details explaining the status. Not available for all status values.
 	StatusDetails *string
 
 	// The ID of the task executions from the maintenance window execution.
@@ -60,7 +60,7 @@ type GetMaintenanceWindowExecutionOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationGetMaintenanceWindowExecutionMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationGetMaintenanceWindowExecutionMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpGetMaintenanceWindowExecution{}, middleware.After)
 	if err != nil {
 		return err

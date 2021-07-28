@@ -11,25 +11,26 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// ServiceSetting is an account-level setting for an AWS service. This setting
-// defines how a user interacts with or uses a service or a feature of a service.
-// For example, if an AWS service charges money to the account based on feature or
-// service usage, then the AWS service team might create a default setting of
-// "false". This means the user can't use this feature unless they change the
-// setting to "true" and intentionally opt in for a paid feature. Services map a
-// SettingId object to a setting value. AWS services teams define the default value
-// for a SettingId. You can't create a new SettingId, but you can overwrite the
-// default value if you have the ssm:UpdateServiceSetting permission for the
-// setting. Use the UpdateServiceSetting API action to change the default setting.
-// Or use the ResetServiceSetting to change the value back to the original value
-// defined by the AWS service team. Query the current service setting for the
+// ServiceSetting is an account-level setting for an Amazon Web Services service.
+// This setting defines how a user interacts with or uses a service or a feature of
+// a service. For example, if an Amazon Web Services service charges money to the
+// account based on feature or service usage, then the Amazon Web Services service
+// team might create a default setting of false. This means the user can't use this
+// feature unless they change the setting to true and intentionally opt in for a
+// paid feature. Services map a SettingId object to a setting value. Amazon Web
+// Services services teams define the default value for a SettingId. You can't
+// create a new SettingId, but you can overwrite the default value if you have the
+// ssm:UpdateServiceSetting permission for the setting. Use the
+// UpdateServiceSetting API operation to change the default setting. Or use the
+// ResetServiceSetting to change the value back to the original value defined by
+// the Amazon Web Services service team. Query the current service setting for the
 // account.
 func (c *Client) GetServiceSetting(ctx context.Context, params *GetServiceSettingInput, optFns ...func(*Options)) (*GetServiceSettingOutput, error) {
 	if params == nil {
 		params = &GetServiceSettingInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "GetServiceSetting", params, optFns, addOperationGetServiceSettingMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "GetServiceSetting", params, optFns, c.addOperationGetServiceSettingMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -39,21 +40,34 @@ func (c *Client) GetServiceSetting(ctx context.Context, params *GetServiceSettin
 	return out, nil
 }
 
-// The request body of the GetServiceSetting API action.
+// The request body of the GetServiceSetting API operation.
 type GetServiceSettingInput struct {
 
-	// The ID of the service setting to get. The setting ID can be
-	// /ssm/automation/customer-script-log-destination,
-	// /ssm/automation/customer-script-log-group-name,
-	// /ssm/parameter-store/default-parameter-tier,
-	// /ssm/parameter-store/high-throughput-enabled, or
-	// /ssm/managed-instance/activation-tier.
+	// The ID of the service setting to get. The setting ID can be one of the
+	// following.
+	//
+	// * /ssm/automation/customer-script-log-destination
+	//
+	// *
+	// /ssm/automation/customer-script-log-group-name
+	//
+	// *
+	// /ssm/documents/console/public-sharing-permission
+	//
+	// *
+	// /ssm/parameter-store/default-parameter-tier
+	//
+	// *
+	// /ssm/parameter-store/high-throughput-enabled
+	//
+	// *
+	// /ssm/managed-instance/activation-tier
 	//
 	// This member is required.
 	SettingId *string
 }
 
-// The query result body of the GetServiceSetting API action.
+// The query result body of the GetServiceSetting API operation.
 type GetServiceSettingOutput struct {
 
 	// The query result of the current service setting.
@@ -63,7 +77,7 @@ type GetServiceSettingOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationGetServiceSettingMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationGetServiceSettingMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpGetServiceSetting{}, middleware.After)
 	if err != nil {
 		return err

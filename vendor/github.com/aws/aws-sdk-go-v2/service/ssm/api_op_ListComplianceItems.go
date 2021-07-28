@@ -12,7 +12,7 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// For a specified resource ID, this API action returns a list of compliance
+// For a specified resource ID, this API operation returns a list of compliance
 // statuses for different resource types. Currently, you can only specify one
 // resource ID per call. List results depend on the criteria specified in the
 // filter.
@@ -21,7 +21,7 @@ func (c *Client) ListComplianceItems(ctx context.Context, params *ListCompliance
 		params = &ListComplianceItemsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "ListComplianceItems", params, optFns, addOperationListComplianceItemsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "ListComplianceItems", params, optFns, c.addOperationListComplianceItemsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ type ListComplianceItemsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationListComplianceItemsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationListComplianceItemsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpListComplianceItems{}, middleware.After)
 	if err != nil {
 		return err

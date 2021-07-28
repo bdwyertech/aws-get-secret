@@ -11,16 +11,16 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Retrieves the default patch baseline. Note that Systems Manager supports
-// creating multiple default patch baselines. For example, you can create a default
-// patch baseline for each operating system. If you do not specify an operating
-// system value, the default patch baseline for Windows is returned.
+// Retrieves the default patch baseline. Amazon Web Services Systems Manager
+// supports creating multiple default patch baselines. For example, you can create
+// a default patch baseline for each operating system. If you don't specify an
+// operating system value, the default patch baseline for Windows is returned.
 func (c *Client) GetDefaultPatchBaseline(ctx context.Context, params *GetDefaultPatchBaselineInput, optFns ...func(*Options)) (*GetDefaultPatchBaselineOutput, error) {
 	if params == nil {
 		params = &GetDefaultPatchBaselineInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "GetDefaultPatchBaseline", params, optFns, addOperationGetDefaultPatchBaselineMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "GetDefaultPatchBaseline", params, optFns, c.addOperationGetDefaultPatchBaselineMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ type GetDefaultPatchBaselineOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationGetDefaultPatchBaselineMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationGetDefaultPatchBaselineMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpGetDefaultPatchBaseline{}, middleware.After)
 	if err != nil {
 		return err

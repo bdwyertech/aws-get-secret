@@ -22,7 +22,7 @@ func (c *Client) ListCommandInvocations(ctx context.Context, params *ListCommand
 		params = &ListCommandInvocationsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "ListCommandInvocations", params, optFns, addOperationListCommandInvocationsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "ListCommandInvocations", params, optFns, c.addOperationListCommandInvocationsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +38,7 @@ type ListCommandInvocationsInput struct {
 	CommandId *string
 
 	// (Optional) If set this returns the response of the command executions and any
-	// command output. The default value is 'false'.
+	// command output. The default value is false.
 	Details bool
 
 	// (Optional) One or more filters. Use a filter to return a more specific list of
@@ -71,7 +71,7 @@ type ListCommandInvocationsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationListCommandInvocationsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationListCommandInvocationsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpListCommandInvocations{}, middleware.After)
 	if err != nil {
 		return err

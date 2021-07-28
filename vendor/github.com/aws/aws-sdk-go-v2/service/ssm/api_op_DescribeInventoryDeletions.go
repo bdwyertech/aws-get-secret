@@ -18,7 +18,7 @@ func (c *Client) DescribeInventoryDeletions(ctx context.Context, params *Describ
 		params = &DescribeInventoryDeletionsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeInventoryDeletions", params, optFns, addOperationDescribeInventoryDeletionsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeInventoryDeletions", params, optFns, c.addOperationDescribeInventoryDeletionsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -31,7 +31,7 @@ func (c *Client) DescribeInventoryDeletions(ctx context.Context, params *Describ
 type DescribeInventoryDeletionsInput struct {
 
 	// Specify the delete inventory ID for which you want information. This ID was
-	// returned by the DeleteInventory action.
+	// returned by the DeleteInventory operation.
 	DeletionId *string
 
 	// The maximum number of items to return for this call. The call also returns a
@@ -55,7 +55,7 @@ type DescribeInventoryDeletionsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeInventoryDeletionsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeInventoryDeletionsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeInventoryDeletions{}, middleware.After)
 	if err != nil {
 		return err

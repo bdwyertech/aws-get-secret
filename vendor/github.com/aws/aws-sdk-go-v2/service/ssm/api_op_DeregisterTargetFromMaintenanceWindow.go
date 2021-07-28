@@ -16,7 +16,7 @@ func (c *Client) DeregisterTargetFromMaintenanceWindow(ctx context.Context, para
 		params = &DeregisterTargetFromMaintenanceWindowInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DeregisterTargetFromMaintenanceWindow", params, optFns, addOperationDeregisterTargetFromMaintenanceWindowMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DeregisterTargetFromMaintenanceWindow", params, optFns, c.addOperationDeregisterTargetFromMaintenanceWindowMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ type DeregisterTargetFromMaintenanceWindowInput struct {
 	WindowTargetId *string
 
 	// The system checks if the target is being referenced by a task. If the target is
-	// being referenced, the system returns an error and does not deregister the target
+	// being referenced, the system returns an error and doesn't deregister the target
 	// from the maintenance window.
 	Safe bool
 }
@@ -56,7 +56,7 @@ type DeregisterTargetFromMaintenanceWindowOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDeregisterTargetFromMaintenanceWindowMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDeregisterTargetFromMaintenanceWindowMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDeregisterTargetFromMaintenanceWindow{}, middleware.After)
 	if err != nil {
 		return err

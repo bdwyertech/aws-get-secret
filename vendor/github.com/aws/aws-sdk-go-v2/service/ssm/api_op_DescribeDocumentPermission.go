@@ -11,15 +11,16 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Describes the permissions for a Systems Manager document. If you created the
-// document, you are the owner. If a document is shared, it can either be shared
-// privately (by specifying a user's AWS account ID) or publicly (All).
+// Describes the permissions for a Amazon Web Services Systems Manager document
+// (SSM document). If you created the document, you are the owner. If a document is
+// shared, it can either be shared privately (by specifying a user's account ID) or
+// publicly (All).
 func (c *Client) DescribeDocumentPermission(ctx context.Context, params *DescribeDocumentPermissionInput, optFns ...func(*Options)) (*DescribeDocumentPermissionOutput, error) {
 	if params == nil {
 		params = &DescribeDocumentPermissionInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeDocumentPermission", params, optFns, addOperationDescribeDocumentPermissionMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeDocumentPermission", params, optFns, c.addOperationDescribeDocumentPermissionMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -53,11 +54,11 @@ type DescribeDocumentPermissionInput struct {
 type DescribeDocumentPermissionOutput struct {
 
 	// The account IDs that have permission to use this document. The ID can be either
-	// an AWS account or All.
+	// an account or All.
 	AccountIds []string
 
-	// A list of AWS accounts where the current document is shared and the version
-	// shared with each account.
+	// A list of accounts where the current document is shared and the version shared
+	// with each account.
 	AccountSharingInfoList []types.AccountSharingInfo
 
 	// The token for the next set of items to return. Use this token to get the next
@@ -68,7 +69,7 @@ type DescribeDocumentPermissionOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeDocumentPermissionMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeDocumentPermissionMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeDocumentPermission{}, middleware.After)
 	if err != nil {
 		return err

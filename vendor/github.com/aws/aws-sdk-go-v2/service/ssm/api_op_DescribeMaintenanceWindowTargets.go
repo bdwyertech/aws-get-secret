@@ -18,7 +18,7 @@ func (c *Client) DescribeMaintenanceWindowTargets(ctx context.Context, params *D
 		params = &DescribeMaintenanceWindowTargetsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeMaintenanceWindowTargets", params, optFns, addOperationDescribeMaintenanceWindowTargetsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeMaintenanceWindowTargets", params, optFns, c.addOperationDescribeMaintenanceWindowTargetsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ type DescribeMaintenanceWindowTargetsInput struct {
 	WindowId *string
 
 	// Optional filters that can be used to narrow down the scope of the returned
-	// window targets. The supported filter keys are Type, WindowTargetId and
+	// window targets. The supported filter keys are Type, WindowTargetId, and
 	// OwnerInformation.
 	Filters []types.MaintenanceWindowFilter
 
@@ -62,7 +62,7 @@ type DescribeMaintenanceWindowTargetsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeMaintenanceWindowTargetsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeMaintenanceWindowTargetsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeMaintenanceWindowTargets{}, middleware.After)
 	if err != nil {
 		return err

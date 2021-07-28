@@ -12,13 +12,13 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists the commands requested by users of the AWS account.
+// Lists the commands requested by users of the account.
 func (c *Client) ListCommands(ctx context.Context, params *ListCommandsInput, optFns ...func(*Options)) (*ListCommandsOutput, error) {
 	if params == nil {
 		params = &ListCommandsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "ListCommands", params, optFns, addOperationListCommandsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "ListCommands", params, optFns, c.addOperationListCommandsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ type ListCommandsInput struct {
 
 	// (Optional) Lists commands issued against this instance ID. You can't specify an
 	// instance ID in the same command that you specify Status = Pending. This is
-	// because the command has not reached the instance yet.
+	// because the command hasn't reached the instance yet.
 	InstanceId *string
 
 	// (Optional) The maximum number of items to return for this call. The call also
@@ -65,7 +65,7 @@ type ListCommandsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationListCommandsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationListCommandsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpListCommands{}, middleware.After)
 	if err != nil {
 		return err

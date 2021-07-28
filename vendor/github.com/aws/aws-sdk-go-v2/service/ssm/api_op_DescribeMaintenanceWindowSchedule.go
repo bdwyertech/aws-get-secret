@@ -18,7 +18,7 @@ func (c *Client) DescribeMaintenanceWindowSchedule(ctx context.Context, params *
 		params = &DescribeMaintenanceWindowScheduleInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeMaintenanceWindowSchedule", params, optFns, addOperationDescribeMaintenanceWindowScheduleMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeMaintenanceWindowSchedule", params, optFns, c.addOperationDescribeMaintenanceWindowScheduleMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -44,10 +44,10 @@ type DescribeMaintenanceWindowScheduleInput struct {
 	NextToken *string
 
 	// The type of resource you want to retrieve information about. For example,
-	// "INSTANCE".
+	// INSTANCE.
 	ResourceType types.MaintenanceWindowResourceType
 
-	// The instance ID or key/value pair to retrieve information about.
+	// The instance ID or key-value pair to retrieve information about.
 	Targets []types.Target
 
 	// The ID of the maintenance window to retrieve information about.
@@ -68,7 +68,7 @@ type DescribeMaintenanceWindowScheduleOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeMaintenanceWindowScheduleMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeMaintenanceWindowScheduleMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeMaintenanceWindowSchedule{}, middleware.After)
 	if err != nil {
 		return err

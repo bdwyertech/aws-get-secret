@@ -18,7 +18,7 @@ func (c *Client) GetMaintenanceWindowExecutionTaskInvocation(ctx context.Context
 		params = &GetMaintenanceWindowExecutionTaskInvocationInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "GetMaintenanceWindowExecutionTaskInvocation", params, optFns, addOperationGetMaintenanceWindowExecutionTaskInvocationMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "GetMaintenanceWindowExecutionTaskInvocation", params, optFns, c.addOperationGetMaintenanceWindowExecutionTaskInvocationMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -58,8 +58,9 @@ type GetMaintenanceWindowExecutionTaskInvocationOutput struct {
 	// The invocation ID.
 	InvocationId *string
 
-	// User-provided value to be included in any CloudWatch events raised while running
-	// tasks for these targets in this maintenance window.
+	// User-provided value to be included in any Amazon CloudWatch Events or Amazon
+	// EventBridge events raised while running tasks for these targets in this
+	// maintenance window.
 	OwnerInformation *string
 
 	// The parameters used at the time that the task ran.
@@ -78,8 +79,7 @@ type GetMaintenanceWindowExecutionTaskInvocationOutput struct {
 	// The task execution ID.
 	TaskExecutionId *string
 
-	// Retrieves the task type for a maintenance window. Task types include the
-	// following: LAMBDA, STEP_FUNCTIONS, AUTOMATION, RUN_COMMAND.
+	// Retrieves the task type for a maintenance window.
 	TaskType types.MaintenanceWindowTaskType
 
 	// The maintenance window execution ID.
@@ -92,7 +92,7 @@ type GetMaintenanceWindowExecutionTaskInvocationOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationGetMaintenanceWindowExecutionTaskInvocationMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationGetMaintenanceWindowExecutionTaskInvocationMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpGetMaintenanceWindowExecutionTaskInvocation{}, middleware.After)
 	if err != nil {
 		return err

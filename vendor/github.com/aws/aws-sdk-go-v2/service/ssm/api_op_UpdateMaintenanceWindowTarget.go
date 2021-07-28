@@ -29,13 +29,13 @@ import (
 // types are ID target, Tag target, and resource group. For more information, see
 // Target.
 //
-// If a parameter is null, then the corresponding field is not modified.
+// If a parameter is null, then the corresponding field isn't modified.
 func (c *Client) UpdateMaintenanceWindowTarget(ctx context.Context, params *UpdateMaintenanceWindowTargetInput, optFns ...func(*Options)) (*UpdateMaintenanceWindowTargetOutput, error) {
 	if params == nil {
 		params = &UpdateMaintenanceWindowTargetInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "UpdateMaintenanceWindowTarget", params, optFns, addOperationUpdateMaintenanceWindowTargetMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "UpdateMaintenanceWindowTarget", params, optFns, c.addOperationUpdateMaintenanceWindowTargetMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -63,13 +63,13 @@ type UpdateMaintenanceWindowTargetInput struct {
 	// A name for the update.
 	Name *string
 
-	// User-provided value that will be included in any CloudWatch events raised while
-	// running tasks for these targets in this maintenance window.
+	// User-provided value that will be included in any Amazon CloudWatch Events events
+	// raised while running tasks for these targets in this maintenance window.
 	OwnerInformation *string
 
 	// If True, then all fields that are required by the
-	// RegisterTargetWithMaintenanceWindow action are also required for this API
-	// request. Optional fields that are not specified are set to null.
+	// RegisterTargetWithMaintenanceWindow operation are also required for this API
+	// request. Optional fields that aren't specified are set to null.
 	Replace bool
 
 	// The targets to add or replace.
@@ -100,7 +100,7 @@ type UpdateMaintenanceWindowTargetOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationUpdateMaintenanceWindowTargetMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationUpdateMaintenanceWindowTargetMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpUpdateMaintenanceWindowTarget{}, middleware.After)
 	if err != nil {
 		return err

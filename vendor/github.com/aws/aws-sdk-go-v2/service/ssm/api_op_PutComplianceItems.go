@@ -12,7 +12,7 @@ import (
 )
 
 // Registers a compliance type and other compliance details on a designated
-// resource. This action lets you register custom compliance details with a
+// resource. This operation lets you register custom compliance details with a
 // resource. This call overwrites existing compliance information on the resource,
 // so you must provide a full list of compliance items each time that you send the
 // request. ComplianceType can be one of the following:
@@ -38,7 +38,7 @@ import (
 // * Severity: A patch
 // severity. For example, critical.
 //
-// * DocumentName: A SSM document name. For
+// * DocumentName: An SSM document name. For
 // example, AWS-RunPatchBaseline.
 //
 // * DocumentVersion: An SSM document version
@@ -66,7 +66,7 @@ func (c *Client) PutComplianceItems(ctx context.Context, params *PutComplianceIt
 		params = &PutComplianceItemsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "PutComplianceItems", params, optFns, addOperationPutComplianceItemsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "PutComplianceItems", params, optFns, c.addOperationPutComplianceItemsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -130,7 +130,7 @@ type PutComplianceItemsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationPutComplianceItemsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationPutComplianceItemsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpPutComplianceItems{}, middleware.After)
 	if err != nil {
 		return err

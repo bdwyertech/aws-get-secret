@@ -15,15 +15,15 @@ import (
 // you can't change the account options for that sync. For example, if you create a
 // sync in the us-east-2 (Ohio) Region and you choose the Include only the current
 // account option, you can't edit that sync later and choose the Include all
-// accounts from my AWS Organizations configuration option. Instead, you must
-// delete the first resource data sync, and create a new one. This API action only
+// accounts from my Organizations configuration option. Instead, you must delete
+// the first resource data sync, and create a new one. This API operation only
 // supports a resource data sync that was created with a SyncFromSource SyncType.
 func (c *Client) UpdateResourceDataSync(ctx context.Context, params *UpdateResourceDataSyncInput, optFns ...func(*Options)) (*UpdateResourceDataSyncOutput, error) {
 	if params == nil {
 		params = &UpdateResourceDataSyncInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "UpdateResourceDataSync", params, optFns, addOperationUpdateResourceDataSyncMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "UpdateResourceDataSync", params, optFns, c.addOperationUpdateResourceDataSyncMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +56,7 @@ type UpdateResourceDataSyncOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationUpdateResourceDataSyncMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationUpdateResourceDataSyncMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpUpdateResourceDataSync{}, middleware.After)
 	if err != nil {
 		return err

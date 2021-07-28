@@ -10,16 +10,16 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Changes the Amazon Identity and Access Management (IAM) role that is assigned to
-// the on-premises instance or virtual machines (VM). IAM roles are first assigned
-// to these hybrid instances during the activation process. For more information,
-// see CreateActivation.
+// Changes the Identity and Access Management (IAM) role that is assigned to the
+// on-premises instance or virtual machines (VM). IAM roles are first assigned to
+// these hybrid instances during the activation process. For more information, see
+// CreateActivation.
 func (c *Client) UpdateManagedInstanceRole(ctx context.Context, params *UpdateManagedInstanceRoleInput, optFns ...func(*Options)) (*UpdateManagedInstanceRoleOutput, error) {
 	if params == nil {
 		params = &UpdateManagedInstanceRoleInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "UpdateManagedInstanceRole", params, optFns, addOperationUpdateManagedInstanceRoleMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "UpdateManagedInstanceRole", params, optFns, c.addOperationUpdateManagedInstanceRoleMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ type UpdateManagedInstanceRoleOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationUpdateManagedInstanceRoleMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationUpdateManagedInstanceRoleMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpUpdateManagedInstanceRole{}, middleware.After)
 	if err != nil {
 		return err

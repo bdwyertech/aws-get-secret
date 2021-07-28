@@ -18,7 +18,7 @@ func (c *Client) GetPatchBaseline(ctx context.Context, params *GetPatchBaselineI
 		params = &GetPatchBaselineInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "GetPatchBaseline", params, optFns, addOperationGetPatchBaselineMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "GetPatchBaseline", params, optFns, c.addOperationGetPatchBaselineMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -49,8 +49,8 @@ type GetPatchBaselineOutput struct {
 	ApprovedPatchesComplianceLevel types.PatchComplianceLevel
 
 	// Indicates whether the list of approved patches includes non-security updates
-	// that should be applied to the instances. The default value is 'false'. Applies
-	// to Linux instances only.
+	// that should be applied to the instances. The default value is false. Applies to
+	// Linux instances only.
 	ApprovedPatchesEnableNonSecurity bool
 
 	// The ID of the retrieved patch baseline.
@@ -93,7 +93,7 @@ type GetPatchBaselineOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationGetPatchBaselineMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationGetPatchBaselineMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpGetPatchBaseline{}, middleware.After)
 	if err != nil {
 		return err

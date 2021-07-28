@@ -1,5 +1,6 @@
-# github.com/aws/aws-sdk-go-v2 v1.3.4
+# github.com/aws/aws-sdk-go-v2 v1.7.1
 ## explicit
+github.com/aws/aws-sdk-go-v2
 github.com/aws/aws-sdk-go-v2/aws
 github.com/aws/aws-sdk-go-v2/aws/arn
 github.com/aws/aws-sdk-go-v2/aws/middleware
@@ -12,17 +13,16 @@ github.com/aws/aws-sdk-go-v2/aws/signer/internal/v4
 github.com/aws/aws-sdk-go-v2/aws/signer/v4
 github.com/aws/aws-sdk-go-v2/aws/transport/http
 github.com/aws/aws-sdk-go-v2/internal/endpoints
-github.com/aws/aws-sdk-go-v2/internal/ini
 github.com/aws/aws-sdk-go-v2/internal/rand
 github.com/aws/aws-sdk-go-v2/internal/sdk
 github.com/aws/aws-sdk-go-v2/internal/sdkio
 github.com/aws/aws-sdk-go-v2/internal/strings
 github.com/aws/aws-sdk-go-v2/internal/sync/singleflight
 github.com/aws/aws-sdk-go-v2/internal/timeconv
-# github.com/aws/aws-sdk-go-v2/config v1.1.6
+# github.com/aws/aws-sdk-go-v2/config v1.5.0
 ## explicit
 github.com/aws/aws-sdk-go-v2/config
-# github.com/aws/aws-sdk-go-v2/credentials v1.1.6
+# github.com/aws/aws-sdk-go-v2/credentials v1.3.1
 ## explicit
 github.com/aws/aws-sdk-go-v2/credentials
 github.com/aws/aws-sdk-go-v2/credentials/ec2rolecreds
@@ -31,25 +31,28 @@ github.com/aws/aws-sdk-go-v2/credentials/endpointcreds/internal/client
 github.com/aws/aws-sdk-go-v2/credentials/processcreds
 github.com/aws/aws-sdk-go-v2/credentials/ssocreds
 github.com/aws/aws-sdk-go-v2/credentials/stscreds
-# github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.0.6
+# github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.3.0
 github.com/aws/aws-sdk-go-v2/feature/ec2/imds
-# github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.0.6
+github.com/aws/aws-sdk-go-v2/feature/ec2/imds/internal/config
+# github.com/aws/aws-sdk-go-v2/internal/ini v1.1.1
+github.com/aws/aws-sdk-go-v2/internal/ini
+# github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.2.1
 github.com/aws/aws-sdk-go-v2/service/internal/presigned-url
-# github.com/aws/aws-sdk-go-v2/service/ssm v1.4.0
+# github.com/aws/aws-sdk-go-v2/service/ssm v1.8.0
 ## explicit
 github.com/aws/aws-sdk-go-v2/service/ssm
 github.com/aws/aws-sdk-go-v2/service/ssm/internal/endpoints
 github.com/aws/aws-sdk-go-v2/service/ssm/types
-# github.com/aws/aws-sdk-go-v2/service/sso v1.1.5
+# github.com/aws/aws-sdk-go-v2/service/sso v1.3.1
 github.com/aws/aws-sdk-go-v2/service/sso
 github.com/aws/aws-sdk-go-v2/service/sso/internal/endpoints
 github.com/aws/aws-sdk-go-v2/service/sso/types
-# github.com/aws/aws-sdk-go-v2/service/sts v1.3.0
+# github.com/aws/aws-sdk-go-v2/service/sts v1.6.0
 ## explicit
 github.com/aws/aws-sdk-go-v2/service/sts
 github.com/aws/aws-sdk-go-v2/service/sts/internal/endpoints
 github.com/aws/aws-sdk-go-v2/service/sts/types
-# github.com/aws/smithy-go v1.3.1
+# github.com/aws/smithy-go v1.6.0
 github.com/aws/smithy-go
 github.com/aws/smithy-go/encoding
 github.com/aws/smithy-go/encoding/httpbinding
@@ -72,14 +75,14 @@ github.com/labstack/gommon/color
 github.com/mattn/go-colorable
 # github.com/mattn/go-isatty v0.0.12
 github.com/mattn/go-isatty
-# github.com/mkideal/cli v0.2.5
+# github.com/mkideal/cli v0.2.7
 ## explicit
 github.com/mkideal/cli
 # github.com/mkideal/expr v0.1.0
 github.com/mkideal/expr
 # golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad
 golang.org/x/crypto/ssh/terminal
-# golang.org/x/sys v0.0.0-20200223170610-d5e6a3e2c0ae
+# golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd
 golang.org/x/sys/plan9
 golang.org/x/sys/unix
 golang.org/x/sys/windows

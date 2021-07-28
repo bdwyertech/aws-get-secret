@@ -13,14 +13,15 @@ import (
 )
 
 // Describes details about the activation, such as the date and time the activation
-// was created, its expiration date, the IAM role assigned to the instances in the
-// activation, and the number of instances registered by using this activation.
+// was created, its expiration date, the Identity and Access Management (IAM) role
+// assigned to the instances in the activation, and the number of instances
+// registered by using this activation.
 func (c *Client) DescribeActivations(ctx context.Context, params *DescribeActivationsInput, optFns ...func(*Options)) (*DescribeActivationsOutput, error) {
 	if params == nil {
 		params = &DescribeActivationsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeActivations", params, optFns, addOperationDescribeActivationsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeActivations", params, optFns, c.addOperationDescribeActivationsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +46,7 @@ type DescribeActivationsInput struct {
 
 type DescribeActivationsOutput struct {
 
-	// A list of activations for your AWS account.
+	// A list of activations for your account.
 	ActivationList []types.Activation
 
 	// The token for the next set of items to return. Use this token to get the next
@@ -56,7 +57,7 @@ type DescribeActivationsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeActivationsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeActivationsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeActivations{}, middleware.After)
 	if err != nil {
 		return err

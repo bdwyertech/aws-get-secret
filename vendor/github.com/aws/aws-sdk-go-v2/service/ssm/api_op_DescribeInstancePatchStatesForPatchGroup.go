@@ -19,7 +19,7 @@ func (c *Client) DescribeInstancePatchStatesForPatchGroup(ctx context.Context, p
 		params = &DescribeInstancePatchStatesForPatchGroupInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeInstancePatchStatesForPatchGroup", params, optFns, addOperationDescribeInstancePatchStatesForPatchGroupMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeInstancePatchStatesForPatchGroup", params, optFns, c.addOperationDescribeInstancePatchStatesForPatchGroupMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -37,9 +37,15 @@ type DescribeInstancePatchStatesForPatchGroupInput struct {
 	// This member is required.
 	PatchGroup *string
 
-	// Each entry in the array is a structure containing: Key (string between 1 and 200
-	// characters) Values (array containing a single string) Type (string "Equal",
-	// "NotEqual", "LessThan", "GreaterThan")
+	// Each entry in the array is a structure containing:
+	//
+	// * Key (string between 1 and
+	// 200 characters)
+	//
+	// * Values (array containing a single string)
+	//
+	// * Type (string
+	// "Equal", "NotEqual", "LessThan", "GreaterThan")
 	Filters []types.InstancePatchStateFilter
 
 	// The maximum number of patches to return (per page).
@@ -63,7 +69,7 @@ type DescribeInstancePatchStatesForPatchGroupOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeInstancePatchStatesForPatchGroupMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeInstancePatchStatesForPatchGroupMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeInstancePatchStatesForPatchGroup{}, middleware.After)
 	if err != nil {
 		return err

@@ -12,22 +12,23 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Query a set of OpsItems. You must have permission in AWS Identity and Access
+// Query a set of OpsItems. You must have permission in Identity and Access
 // Management (IAM) to query a list of OpsItems. For more information, see Getting
 // started with OpsCenter
 // (https://docs.aws.amazon.com/systems-manager/latest/userguide/OpsCenter-getting-started.html)
-// in the AWS Systems Manager User Guide. Operations engineers and IT professionals
-// use OpsCenter to view, investigate, and remediate operational issues impacting
-// the performance and health of their AWS resources. For more information, see AWS
-// Systems Manager OpsCenter
+// in the Amazon Web Services Systems Manager User Guide. Operations engineers and
+// IT professionals use Amazon Web Services Systems Manager OpsCenter to view,
+// investigate, and remediate operational issues impacting the performance and
+// health of their Amazon Web Services resources. For more information, see
+// OpsCenter
 // (https://docs.aws.amazon.com/systems-manager/latest/userguide/OpsCenter.html) in
-// the AWS Systems Manager User Guide.
+// the Amazon Web Services Systems Manager User Guide.
 func (c *Client) DescribeOpsItems(ctx context.Context, params *DescribeOpsItemsInput, optFns ...func(*Options)) (*DescribeOpsItemsOutput, error) {
 	if params == nil {
 		params = &DescribeOpsItemsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeOpsItems", params, optFns, addOperationDescribeOpsItemsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeOpsItems", params, optFns, c.addOperationDescribeOpsItemsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -64,27 +65,29 @@ type DescribeOpsItemsInput struct {
 	// * Key: Status
 	// Operations: Equals
 	//
-	// * Key: Title Operations: Contains
-	//
-	// * Key: OperationalData*
-	// Operations: Equals
-	//
-	// * Key: OperationalDataKey Operations: Equals
+	// * Key: Title* Operations: Equals,Contains
 	//
 	// * Key:
-	// OperationalDataValue Operations: Equals, Contains
+	// OperationalData** Operations: Equals
 	//
-	// * Key: OpsItemId Operations:
+	// * Key: OperationalDataKey Operations:
 	// Equals
+	//
+	// * Key: OperationalDataValue Operations: Equals, Contains
+	//
+	// * Key:
+	// OpsItemId Operations: Equals
 	//
 	// * Key: ResourceId Operations: Contains
 	//
-	// * Key: AutomationId Operations:
-	// Equals
+	// * Key:
+	// AutomationId Operations: Equals
 	//
-	// *If you filter the response by using the OperationalData operator,
-	// specify a key-value pair by using the following JSON format:
-	// {"key":"key_name","value":"a_value"}
+	// *The Equals operator for Title matches the
+	// first 100 characters. If you specify more than 100 characters, they system
+	// returns an error that the filter value exceeds the length limit. **If you filter
+	// the response by using the OperationalData operator, specify a key-value pair by
+	// using the following JSON format: {"key":"key_name","value":"a_value"}
 	OpsItemFilters []types.OpsItemFilter
 }
 
@@ -101,7 +104,7 @@ type DescribeOpsItemsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeOpsItemsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeOpsItemsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeOpsItems{}, middleware.After)
 	if err != nil {
 		return err

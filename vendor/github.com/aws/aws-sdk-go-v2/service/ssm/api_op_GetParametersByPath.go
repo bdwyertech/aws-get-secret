@@ -25,7 +25,7 @@ func (c *Client) GetParametersByPath(ctx context.Context, params *GetParametersB
 		params = &GetParametersByPathInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "GetParametersByPath", params, optFns, addOperationGetParametersByPathMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "GetParametersByPath", params, optFns, c.addOperationGetParametersByPathMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ type GetParametersByPathInput struct {
 
 	// The hierarchy for the parameter. Hierarchies start with a forward slash (/). The
 	// hierachy is the parameter name except the last part of the parameter. For the
-	// API call to succeeed, the last part of the parameter name cannot be in the path.
+	// API call to succeeed, the last part of the parameter name can't be in the path.
 	// A parameter name hierarchy can have a maximum of 15 levels. Here is an example
 	// of a hierarchy: /Finance/Prod/IAD/WinServ2016/license33
 	//
@@ -62,7 +62,7 @@ type GetParametersByPathInput struct {
 	// the user can access all levels of that path. For example, if a user has
 	// permission to access path /a, then the user can also access /a/b. Even if a user
 	// has explicitly been denied access in IAM for parameter /a/b, they can still call
-	// the GetParametersByPath API action recursively for /a and view /a/b.
+	// the GetParametersByPath API operation recursively for /a and view /a/b.
 	Recursive bool
 
 	// Retrieve all parameters in a hierarchy with their value decrypted.
@@ -82,7 +82,7 @@ type GetParametersByPathOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationGetParametersByPathMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationGetParametersByPathMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpGetParametersByPath{}, middleware.After)
 	if err != nil {
 		return err

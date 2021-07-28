@@ -11,14 +11,14 @@ import (
 )
 
 // Permanently ends a session and closes the data connection between the Session
-// Manager client and SSM Agent on the instance. A terminated session cannot be
+// Manager client and SSM Agent on the instance. A terminated session isn't be
 // resumed.
 func (c *Client) TerminateSession(ctx context.Context, params *TerminateSessionInput, optFns ...func(*Options)) (*TerminateSessionOutput, error) {
 	if params == nil {
 		params = &TerminateSessionInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "TerminateSession", params, optFns, addOperationTerminateSessionMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "TerminateSession", params, optFns, c.addOperationTerminateSessionMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ type TerminateSessionOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationTerminateSessionMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationTerminateSessionMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpTerminateSession{}, middleware.After)
 	if err != nil {
 		return err

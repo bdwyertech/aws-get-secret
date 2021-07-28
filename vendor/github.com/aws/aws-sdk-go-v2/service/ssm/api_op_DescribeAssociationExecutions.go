@@ -12,13 +12,13 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Use this API action to view all executions for a specific association ID.
+// Views all executions for a specific association ID.
 func (c *Client) DescribeAssociationExecutions(ctx context.Context, params *DescribeAssociationExecutionsInput, optFns ...func(*Options)) (*DescribeAssociationExecutionsOutput, error) {
 	if params == nil {
 		params = &DescribeAssociationExecutionsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeAssociationExecutions", params, optFns, addOperationDescribeAssociationExecutionsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeAssociationExecutions", params, optFns, c.addOperationDescribeAssociationExecutionsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -60,7 +60,7 @@ type DescribeAssociationExecutionsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeAssociationExecutionsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeAssociationExecutionsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeAssociationExecutions{}, middleware.After)
 	if err != nil {
 		return err

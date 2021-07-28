@@ -10,15 +10,15 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Deletes a Resource Data Sync configuration. After the configuration is deleted,
+// Deletes a resource data sync configuration. After the configuration is deleted,
 // changes to data on managed instances are no longer synced to or from the target.
-// Deleting a sync configuration does not delete data.
+// Deleting a sync configuration doesn't delete data.
 func (c *Client) DeleteResourceDataSync(ctx context.Context, params *DeleteResourceDataSyncInput, optFns ...func(*Options)) (*DeleteResourceDataSyncOutput, error) {
 	if params == nil {
 		params = &DeleteResourceDataSyncInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DeleteResourceDataSync", params, optFns, addOperationDeleteResourceDataSyncMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DeleteResourceDataSync", params, optFns, c.addOperationDeleteResourceDataSyncMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ type DeleteResourceDataSyncOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDeleteResourceDataSyncMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDeleteResourceDataSyncMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDeleteResourceDataSync{}, middleware.After)
 	if err != nil {
 		return err

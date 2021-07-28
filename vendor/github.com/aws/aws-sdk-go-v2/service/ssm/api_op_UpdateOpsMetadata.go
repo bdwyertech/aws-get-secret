@@ -11,14 +11,14 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Systems Manager calls this API action when you edit OpsMetadata in Application
-// Manager.
+// Amazon Web Services Systems Manager calls this API operation when you edit
+// OpsMetadata in Application Manager.
 func (c *Client) UpdateOpsMetadata(ctx context.Context, params *UpdateOpsMetadataInput, optFns ...func(*Options)) (*UpdateOpsMetadataOutput, error) {
 	if params == nil {
 		params = &UpdateOpsMetadataInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "UpdateOpsMetadata", params, optFns, addOperationUpdateOpsMetadataMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "UpdateOpsMetadata", params, optFns, c.addOperationUpdateOpsMetadataMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ type UpdateOpsMetadataOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationUpdateOpsMetadataMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationUpdateOpsMetadataMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpUpdateOpsMetadata{}, middleware.After)
 	if err != nil {
 		return err

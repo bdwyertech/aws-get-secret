@@ -10,17 +10,18 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Disassociates the specified Systems Manager document from the specified
-// instance. When you disassociate a document from an instance, it does not change
-// the configuration of the instance. To change the configuration state of an
-// instance after you disassociate a document, you must create a new document with
-// the desired configuration and associate it with the instance.
+// Disassociates the specified Amazon Web Services Systems Manager document (SSM
+// document) from the specified instance. When you disassociate a document from an
+// instance, it doesn't change the configuration of the instance. To change the
+// configuration state of an instance after you disassociate a document, you must
+// create a new document with the desired configuration and associate it with the
+// instance.
 func (c *Client) DeleteAssociation(ctx context.Context, params *DeleteAssociationInput, optFns ...func(*Options)) (*DeleteAssociationOutput, error) {
 	if params == nil {
 		params = &DeleteAssociationInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DeleteAssociation", params, optFns, addOperationDeleteAssociationMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DeleteAssociation", params, optFns, c.addOperationDeleteAssociationMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -38,7 +39,7 @@ type DeleteAssociationInput struct {
 	// The ID of the instance.
 	InstanceId *string
 
-	// The name of the Systems Manager document.
+	// The name of the SSM document.
 	Name *string
 }
 
@@ -47,7 +48,7 @@ type DeleteAssociationOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDeleteAssociationMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDeleteAssociationMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDeleteAssociation{}, middleware.After)
 	if err != nil {
 		return err

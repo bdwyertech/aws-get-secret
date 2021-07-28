@@ -19,7 +19,7 @@ func (c *Client) DescribeInstancePatches(ctx context.Context, params *DescribeIn
 		params = &DescribeInstancePatchesInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "DescribeInstancePatches", params, optFns, addOperationDescribeInstancePatchesMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DescribeInstancePatches", params, optFns, c.addOperationDescribeInstancePatchesMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -36,9 +36,19 @@ type DescribeInstancePatchesInput struct {
 	// This member is required.
 	InstanceId *string
 
-	// An array of structures. Each entry in the array is a structure containing a Key,
-	// Value combination. Valid values for Key are Classification | KBId | Severity |
-	// State.
+	// Each element in the array is a structure containing a key-value pair. Supported
+	// keys for DescribeInstancePatchesinclude the following:
+	//
+	// * Classification Sample
+	// values: Security | SecurityUpdates
+	//
+	// * KBId Sample values: KB4480056 |
+	// java-1.7.0-openjdk.x86_64
+	//
+	// * Severity Sample values: Important | Medium | Low
+	//
+	// *
+	// State Sample values: Installed | InstalledOther | InstalledPendingReboot
 	Filters []types.PatchOrchestratorFilter
 
 	// The maximum number of patches to return (per page).
@@ -55,16 +65,30 @@ type DescribeInstancePatchesOutput struct {
 	// additional items to return, the string is empty.
 	NextToken *string
 
-	// Each entry in the array is a structure containing: Title (string) KBId (string)
-	// Classification (string) Severity (string) State (string, such as "INSTALLED" or
-	// "FAILED") InstalledTime (DateTime) InstalledBy (string)
+	// Each entry in the array is a structure containing:
+	//
+	// * Title (string)
+	//
+	// * KBId
+	// (string)
+	//
+	// * Classification (string)
+	//
+	// * Severity (string)
+	//
+	// * State (string, such
+	// as "INSTALLED" or "FAILED")
+	//
+	// * InstalledTime (DateTime)
+	//
+	// * InstalledBy (string)
 	Patches []types.PatchComplianceData
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationDescribeInstancePatchesMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationDescribeInstancePatchesMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDescribeInstancePatches{}, middleware.After)
 	if err != nil {
 		return err

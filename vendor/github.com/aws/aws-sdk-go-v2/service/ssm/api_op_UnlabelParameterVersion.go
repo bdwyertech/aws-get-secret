@@ -16,7 +16,7 @@ func (c *Client) UnlabelParameterVersion(ctx context.Context, params *UnlabelPar
 		params = &UnlabelParameterVersionInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "UnlabelParameterVersion", params, optFns, addOperationUnlabelParameterVersionMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "UnlabelParameterVersion", params, optFns, c.addOperationUnlabelParameterVersionMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -33,13 +33,13 @@ type UnlabelParameterVersionInput struct {
 	// This member is required.
 	Labels []string
 
-	// The parameter name of which you want to delete one or more labels.
+	// The name of the parameter from which you want to delete one or more labels.
 	//
 	// This member is required.
 	Name *string
 
 	// The specific version of the parameter which you want to delete one or more
-	// labels from. If it is not present, the call will fail.
+	// labels from. If it isn't present, the call will fail.
 	//
 	// This member is required.
 	ParameterVersion int64
@@ -47,7 +47,7 @@ type UnlabelParameterVersionInput struct {
 
 type UnlabelParameterVersionOutput struct {
 
-	// The labels that are not attached to the given parameter version.
+	// The labels that aren't attached to the given parameter version.
 	InvalidLabels []string
 
 	// A list of all labels deleted from the parameter.
@@ -57,7 +57,7 @@ type UnlabelParameterVersionOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationUnlabelParameterVersionMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationUnlabelParameterVersionMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpUnlabelParameterVersion{}, middleware.After)
 	if err != nil {
 		return err

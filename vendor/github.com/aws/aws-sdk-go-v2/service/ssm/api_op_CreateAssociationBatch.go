@@ -11,9 +11,10 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Associates the specified Systems Manager document with the specified instances
-// or targets. When you associate a document with one or more instances using
-// instance IDs or tags, SSM Agent running on the instance processes the document
+// Associates the specified Amazon Web Services Systems Manager document (SSM
+// document) with the specified instances or targets. When you associate a document
+// with one or more instances using instance IDs or tags, Amazon Web Services
+// Systems Manager Agent (SSM Agent) running on the instance processes the document
 // and configures the instance as specified. If you associate a document with an
 // instance that already has an associated document, the system returns the
 // AssociationAlreadyExists exception.
@@ -22,7 +23,7 @@ func (c *Client) CreateAssociationBatch(ctx context.Context, params *CreateAssoc
 		params = &CreateAssociationBatchInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "CreateAssociationBatch", params, optFns, addOperationCreateAssociationBatchMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "CreateAssociationBatch", params, optFns, c.addOperationCreateAssociationBatchMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +53,7 @@ type CreateAssociationBatchOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationCreateAssociationBatchMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationCreateAssociationBatchMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpCreateAssociationBatch{}, middleware.After)
 	if err != nil {
 		return err

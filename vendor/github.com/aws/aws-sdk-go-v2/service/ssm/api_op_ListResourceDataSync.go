@@ -26,7 +26,7 @@ func (c *Client) ListResourceDataSync(ctx context.Context, params *ListResourceD
 		params = &ListResourceDataSyncInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "ListResourceDataSync", params, optFns, addOperationListResourceDataSyncMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "ListResourceDataSync", params, optFns, c.addOperationListResourceDataSyncMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -47,8 +47,8 @@ type ListResourceDataSyncInput struct {
 
 	// View a list of resource data syncs according to the sync type. Specify
 	// SyncToDestination to view resource data syncs that synchronize data to an Amazon
-	// S3 bucket. Specify SyncFromSource to view resource data syncs from AWS
-	// Organizations or from multiple AWS Regions.
+	// S3 bucket. Specify SyncFromSource to view resource data syncs from Organizations
+	// or from multiple Regions.
 	SyncType *string
 }
 
@@ -58,14 +58,14 @@ type ListResourceDataSyncOutput struct {
 	// set of results.
 	NextToken *string
 
-	// A list of your current Resource Data Sync configurations and their statuses.
+	// A list of your current resource data sync configurations and their statuses.
 	ResourceDataSyncItems []types.ResourceDataSyncItem
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationListResourceDataSyncMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationListResourceDataSyncMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpListResourceDataSync{}, middleware.After)
 	if err != nil {
 		return err

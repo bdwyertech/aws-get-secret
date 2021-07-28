@@ -12,15 +12,15 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Returns a list of all OpsItem events in the current AWS account and Region. You
-// can limit the results to events associated with specific OpsItems by specifying
-// a filter.
+// Returns a list of all OpsItem events in the current Region and account. You can
+// limit the results to events associated with specific OpsItems by specifying a
+// filter.
 func (c *Client) ListOpsItemEvents(ctx context.Context, params *ListOpsItemEventsInput, optFns ...func(*Options)) (*ListOpsItemEventsOutput, error) {
 	if params == nil {
 		params = &ListOpsItemEventsInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "ListOpsItemEvents", params, optFns, addOperationListOpsItemEventsMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "ListOpsItemEvents", params, optFns, c.addOperationListOpsItemEventsMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +57,7 @@ type ListOpsItemEventsOutput struct {
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationListOpsItemEventsMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationListOpsItemEventsMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpListOpsItemEvents{}, middleware.After)
 	if err != nil {
 		return err

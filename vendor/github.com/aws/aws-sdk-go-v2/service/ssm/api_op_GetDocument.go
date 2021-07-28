@@ -9,15 +9,17 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/aws/smithy-go/middleware"
 	smithyhttp "github.com/aws/smithy-go/transport/http"
+	"time"
 )
 
-// Gets the contents of the specified Systems Manager document.
+// Gets the contents of the specified Amazon Web Services Systems Manager document
+// (SSM document).
 func (c *Client) GetDocument(ctx context.Context, params *GetDocumentInput, optFns ...func(*Options)) (*GetDocumentOutput, error) {
 	if params == nil {
 		params = &GetDocumentInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "GetDocument", params, optFns, addOperationGetDocumentMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "GetDocument", params, optFns, c.addOperationGetDocumentMiddlewares)
 	if err != nil {
 		return nil, err
 	}
@@ -29,7 +31,7 @@ func (c *Client) GetDocument(ctx context.Context, params *GetDocumentInput, optF
 
 type GetDocumentInput struct {
 
-	// The name of the Systems Manager document.
+	// The name of the SSM document.
 	//
 	// This member is required.
 	Name *string
@@ -53,8 +55,15 @@ type GetDocumentOutput struct {
 	// and so on.
 	AttachmentsContent []types.AttachmentContent
 
-	// The contents of the Systems Manager document.
+	// The contents of the SSM document.
 	Content *string
+
+	// The date the SSM document was created.
+	CreatedDate *time.Time
+
+	// The friendly name of the SSM document. This value can differ for each version of
+	// the document. If you want to update this value, see UpdateDocument.
+	DisplayName *string
 
 	// The document format, either JSON or YAML.
 	DocumentFormat types.DocumentFormat
@@ -65,7 +74,7 @@ type GetDocumentOutput struct {
 	// The document version.
 	DocumentVersion *string
 
-	// The name of the Systems Manager document.
+	// The name of the SSM document.
 	Name *string
 
 	// A list of SSM documents required by a document. For example, an
@@ -81,26 +90,26 @@ type GetDocumentOutput struct {
 	// in review, or PENDING, at a time.
 	ReviewStatus types.ReviewStatus
 
-	// The status of the Systems Manager document, such as Creating, Active, Updating,
-	// Failed, and Deleting.
+	// The status of the SSM document, such as Creating, Active, Updating, Failed, and
+	// Deleting.
 	Status types.DocumentStatus
 
-	// A message returned by AWS Systems Manager that explains the Status value. For
-	// example, a Failed status might be explained by the StatusInformation message,
-	// "The specified S3 bucket does not exist. Verify that the URL of the S3 bucket is
-	// correct."
+	// A message returned by Amazon Web Services Systems Manager that explains the
+	// Status value. For example, a Failed status might be explained by the
+	// StatusInformation message, "The specified S3 bucket doesn't exist. Verify that
+	// the URL of the S3 bucket is correct."
 	StatusInformation *string
 
 	// The version of the artifact associated with the document. For example, "Release
-	// 12, Update 6". This value is unique across all versions of a document, and
-	// cannot be changed.
+	// 12, Update 6". This value is unique across all versions of a document, and can't
+	// be changed.
 	VersionName *string
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
 }
 
-func addOperationGetDocumentMiddlewares(stack *middleware.Stack, options Options) (err error) {
+func (c *Client) addOperationGetDocumentMiddlewares(stack *middleware.Stack, options Options) (err error) {
 	err = stack.Serialize.Add(&awsAwsjson11_serializeOpGetDocument{}, middleware.After)
 	if err != nil {
 		return err
