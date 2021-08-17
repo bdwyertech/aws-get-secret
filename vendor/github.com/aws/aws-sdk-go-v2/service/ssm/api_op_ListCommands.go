@@ -12,7 +12,7 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists the commands requested by users of the account.
+// Lists the commands requested by users of the Amazon Web Services account.
 func (c *Client) ListCommands(ctx context.Context, params *ListCommandsInput, optFns ...func(*Options)) (*ListCommandsOutput, error) {
 	if params == nil {
 		params = &ListCommandsInput{}
@@ -50,6 +50,8 @@ type ListCommandsInput struct {
 	// (Optional) The token for the next set of items to return. (You received this
 	// token from a previous call.)
 	NextToken *string
+
+	noSmithyDocumentSerde
 }
 
 type ListCommandsOutput struct {
@@ -63,6 +65,8 @@ type ListCommandsOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationListCommandsMiddlewares(stack *middleware.Stack, options Options) (err error) {

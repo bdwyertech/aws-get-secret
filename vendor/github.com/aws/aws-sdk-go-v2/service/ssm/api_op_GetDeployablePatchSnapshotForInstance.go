@@ -14,12 +14,12 @@ import (
 // Retrieves the current snapshot for the patch baseline the instance uses. This
 // API is primarily used by the AWS-RunPatchBaseline Systems Manager document (SSM
 // document). If you run the command locally, such as with the Command Line
-// Interface (CLI), the system attempts to use your local AWS credentials and the
-// operation fails. To avoid this, you can run the command in the Amazon Web
-// Services Systems Manager console. Use Run Command, a capability of Amazon Web
-// Services Systems Manager, with an SSM document that enables you to target an
-// instance with a script or command. For example, run the command using the
-// AWS-RunShellScript document or the AWS-RunPowerShellScript document.
+// Interface (CLI), the system attempts to use your local Amazon Web Services
+// credentials and the operation fails. To avoid this, you can run the command in
+// the Amazon Web Services Systems Manager console. Use Run Command, a capability
+// of Amazon Web Services Systems Manager, with an SSM document that enables you to
+// target an instance with a script or command. For example, run the command using
+// the AWS-RunShellScript document or the AWS-RunPowerShellScript document.
 func (c *Client) GetDeployablePatchSnapshotForInstance(ctx context.Context, params *GetDeployablePatchSnapshotForInstanceInput, optFns ...func(*Options)) (*GetDeployablePatchSnapshotForInstanceOutput, error) {
 	if params == nil {
 		params = &GetDeployablePatchSnapshotForInstanceInput{}
@@ -50,11 +50,13 @@ type GetDeployablePatchSnapshotForInstanceInput struct {
 
 	// Defines the basic information about a patch baseline override.
 	BaselineOverride *types.BaselineOverride
+
+	noSmithyDocumentSerde
 }
 
 type GetDeployablePatchSnapshotForInstanceOutput struct {
 
-	// The ID of the instance.
+	// The instance ID.
 	InstanceId *string
 
 	// Returns the specific operating system (for example Windows Server 2012 or Amazon
@@ -70,6 +72,8 @@ type GetDeployablePatchSnapshotForInstanceOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationGetDeployablePatchSnapshotForInstanceMiddlewares(stack *middleware.Stack, options Options) (err error) {

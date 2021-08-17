@@ -12,7 +12,7 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Retrieves the maintenance windows in an account.
+// Retrieves the maintenance windows in an Amazon Web Services account.
 func (c *Client) DescribeMaintenanceWindows(ctx context.Context, params *DescribeMaintenanceWindowsInput, optFns ...func(*Options)) (*DescribeMaintenanceWindowsOutput, error) {
 	if params == nil {
 		params = &DescribeMaintenanceWindowsInput{}
@@ -42,6 +42,8 @@ type DescribeMaintenanceWindowsInput struct {
 	// The token for the next set of items to return. (You received this token from a
 	// previous call.)
 	NextToken *string
+
+	noSmithyDocumentSerde
 }
 
 type DescribeMaintenanceWindowsOutput struct {
@@ -55,6 +57,8 @@ type DescribeMaintenanceWindowsOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationDescribeMaintenanceWindowsMiddlewares(stack *middleware.Stack, options Options) (err error) {

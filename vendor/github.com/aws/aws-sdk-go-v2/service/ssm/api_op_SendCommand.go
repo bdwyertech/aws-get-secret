@@ -103,7 +103,8 @@ type SendCommandInput struct {
 	OutputS3KeyPrefix *string
 
 	// (Deprecated) You can no longer specify this parameter. The system ignores it.
-	// Instead, Systems Manager automatically determines the Region of the S3 bucket.
+	// Instead, Systems Manager automatically determines the Amazon Web Services Region
+	// of the S3 bucket.
 	OutputS3Region *string
 
 	// The required and optional parameters specified in the document being run.
@@ -128,6 +129,8 @@ type SendCommandInput struct {
 	// If this time is reached and the command hasn't already started running, it won't
 	// run.
 	TimeoutSeconds int32
+
+	noSmithyDocumentSerde
 }
 
 type SendCommandOutput struct {
@@ -138,6 +141,8 @@ type SendCommandOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationSendCommandMiddlewares(stack *middleware.Stack, options Options) (err error) {

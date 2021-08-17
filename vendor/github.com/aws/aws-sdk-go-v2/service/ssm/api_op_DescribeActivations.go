@@ -42,11 +42,13 @@ type DescribeActivationsInput struct {
 
 	// A token to start the list. Use this token to get the next set of results.
 	NextToken *string
+
+	noSmithyDocumentSerde
 }
 
 type DescribeActivationsOutput struct {
 
-	// A list of activations for your account.
+	// A list of activations for your Amazon Web Services account.
 	ActivationList []types.Activation
 
 	// The token for the next set of items to return. Use this token to get the next
@@ -55,6 +57,8 @@ type DescribeActivationsOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationDescribeActivationsMiddlewares(stack *middleware.Stack, options Options) (err error) {

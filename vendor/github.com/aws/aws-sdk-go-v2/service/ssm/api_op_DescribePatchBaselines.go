@@ -12,7 +12,7 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Lists the patch baselines in your account.
+// Lists the patch baselines in your Amazon Web Services account.
 func (c *Client) DescribePatchBaselines(ctx context.Context, params *DescribePatchBaselinesInput, optFns ...func(*Options)) (*DescribePatchBaselinesOutput, error) {
 	if params == nil {
 		params = &DescribePatchBaselinesInput{}
@@ -48,6 +48,8 @@ type DescribePatchBaselinesInput struct {
 	// The token for the next set of items to return. (You received this token from a
 	// previous call.)
 	NextToken *string
+
+	noSmithyDocumentSerde
 }
 
 type DescribePatchBaselinesOutput struct {
@@ -61,6 +63,8 @@ type DescribePatchBaselinesOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationDescribePatchBaselinesMiddlewares(stack *middleware.Stack, options Options) (err error) {

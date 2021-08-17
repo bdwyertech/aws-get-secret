@@ -13,8 +13,8 @@ import (
 
 // Describes the permissions for a Amazon Web Services Systems Manager document
 // (SSM document). If you created the document, you are the owner. If a document is
-// shared, it can either be shared privately (by specifying a user's account ID) or
-// publicly (All).
+// shared, it can either be shared privately (by specifying a user's Amazon Web
+// Services account ID) or publicly (All).
 func (c *Client) DescribeDocumentPermission(ctx context.Context, params *DescribeDocumentPermissionInput, optFns ...func(*Options)) (*DescribeDocumentPermissionOutput, error) {
 	if params == nil {
 		params = &DescribeDocumentPermissionInput{}
@@ -49,16 +49,18 @@ type DescribeDocumentPermissionInput struct {
 	// The token for the next set of items to return. (You received this token from a
 	// previous call.)
 	NextToken *string
+
+	noSmithyDocumentSerde
 }
 
 type DescribeDocumentPermissionOutput struct {
 
 	// The account IDs that have permission to use this document. The ID can be either
-	// an account or All.
+	// an Amazon Web Services account or All.
 	AccountIds []string
 
-	// A list of accounts where the current document is shared and the version shared
-	// with each account.
+	// A list of Amazon Web Services accounts where the current document is shared and
+	// the version shared with each account.
 	AccountSharingInfoList []types.AccountSharingInfo
 
 	// The token for the next set of items to return. Use this token to get the next
@@ -67,6 +69,8 @@ type DescribeDocumentPermissionOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationDescribeDocumentPermissionMiddlewares(stack *middleware.Stack, options Options) (err error) {

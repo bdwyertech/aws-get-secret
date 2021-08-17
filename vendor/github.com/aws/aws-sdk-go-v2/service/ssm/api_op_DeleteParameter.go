@@ -10,7 +10,8 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Delete a parameter from the system.
+// Delete a parameter from the system. After deleting a parameter, wait for at
+// least 30 seconds to create a parameter with the same name.
 func (c *Client) DeleteParameter(ctx context.Context, params *DeleteParameterInput, optFns ...func(*Options)) (*DeleteParameterOutput, error) {
 	if params == nil {
 		params = &DeleteParameterInput{}
@@ -32,11 +33,15 @@ type DeleteParameterInput struct {
 	//
 	// This member is required.
 	Name *string
+
+	noSmithyDocumentSerde
 }
 
 type DeleteParameterOutput struct {
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationDeleteParameterMiddlewares(stack *middleware.Stack, options Options) (err error) {

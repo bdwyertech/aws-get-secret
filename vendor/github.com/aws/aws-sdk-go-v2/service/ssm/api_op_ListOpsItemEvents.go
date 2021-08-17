@@ -12,9 +12,9 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Returns a list of all OpsItem events in the current Region and account. You can
-// limit the results to events associated with specific OpsItems by specifying a
-// filter.
+// Returns a list of all OpsItem events in the current Amazon Web Services Region
+// and Amazon Web Services account. You can limit the results to events associated
+// with specific OpsItems by specifying a filter.
 func (c *Client) ListOpsItemEvents(ctx context.Context, params *ListOpsItemEventsInput, optFns ...func(*Options)) (*ListOpsItemEventsOutput, error) {
 	if params == nil {
 		params = &ListOpsItemEventsInput{}
@@ -42,6 +42,8 @@ type ListOpsItemEventsInput struct {
 
 	// A token to start the list. Use this token to get the next set of results.
 	NextToken *string
+
+	noSmithyDocumentSerde
 }
 
 type ListOpsItemEventsOutput struct {
@@ -55,6 +57,8 @@ type ListOpsItemEventsOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationListOpsItemEventsMiddlewares(stack *middleware.Stack, options Options) (err error) {

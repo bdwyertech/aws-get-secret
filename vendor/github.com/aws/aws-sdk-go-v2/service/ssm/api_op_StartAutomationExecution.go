@@ -88,10 +88,11 @@ type StartAutomationExecutionInput struct {
 	// patch baseline, use the AddTagsToResource operation.
 	Tags []types.Tag
 
-	// A location is a combination of Regions and/or accounts where you want to run the
-	// automation. Use this operation to start an automation in multiple Regions and
-	// multiple accounts. For more information, see Running Automation workflows in
-	// multiple Regions and accounts
+	// A location is a combination of Amazon Web Services Regions and/or Amazon Web
+	// Services accounts where you want to run the automation. Use this operation to
+	// start an automation in multiple Amazon Web Services Regions and multiple Amazon
+	// Web Services accounts. For more information, see Running Automation workflows in
+	// multiple Amazon Web Services Regions and Amazon Web Services accounts
 	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-automation-multiple-accounts-and-regions.html)
 	// in the Amazon Web Services Systems Manager User Guide.
 	TargetLocations []types.TargetLocation
@@ -107,6 +108,8 @@ type StartAutomationExecutionInput struct {
 	// A key-value mapping to target resources. Required if you specify
 	// TargetParameterName.
 	Targets []types.Target
+
+	noSmithyDocumentSerde
 }
 
 type StartAutomationExecutionOutput struct {
@@ -116,6 +119,8 @@ type StartAutomationExecutionOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationStartAutomationExecutionMiddlewares(stack *middleware.Stack, options Options) (err error) {

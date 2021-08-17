@@ -12,7 +12,8 @@ import (
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Query inventory information.
+// Query inventory information. This includes instance status, such as Stopped or
+// Terminated.
 func (c *Client) GetInventory(ctx context.Context, params *GetInventoryInput, optFns ...func(*Options)) (*GetInventoryOutput, error) {
 	if params == nil {
 		params = &GetInventoryInput{}
@@ -49,6 +50,8 @@ type GetInventoryInput struct {
 
 	// The list of inventory item types to return.
 	ResultAttributes []types.ResultAttribute
+
+	noSmithyDocumentSerde
 }
 
 type GetInventoryOutput struct {
@@ -62,6 +65,8 @@ type GetInventoryOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationGetInventoryMiddlewares(stack *middleware.Stack, options Options) (err error) {

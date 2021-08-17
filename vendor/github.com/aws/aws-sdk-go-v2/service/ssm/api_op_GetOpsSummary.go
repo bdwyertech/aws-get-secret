@@ -53,11 +53,13 @@ type GetOpsSummaryInput struct {
 
 	// Specify the name of a resource data sync to get.
 	SyncName *string
+
+	noSmithyDocumentSerde
 }
 
 type GetOpsSummaryOutput struct {
 
-	// The list of aggregated and filtered OpsData.
+	// The list of aggregated details and filtered OpsData.
 	Entities []types.OpsEntity
 
 	// The token for the next set of items to return. Use this token to get the next
@@ -66,6 +68,8 @@ type GetOpsSummaryOutput struct {
 
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
+
+	noSmithyDocumentSerde
 }
 
 func (c *Client) addOperationGetOpsSummaryMiddlewares(stack *middleware.Stack, options Options) (err error) {
