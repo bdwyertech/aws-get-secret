@@ -1,3 +1,13 @@
+# v1.13.0 (2021-10-21)
+
+* **Feature**: Updated  to latest version
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.12.0 (2021-10-11)
+
+* **Feature**: API client updated
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.11.0 (2021-09-24)
 
 * **Feature**: API client updated
