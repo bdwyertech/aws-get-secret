@@ -1117,6 +1117,7 @@ const (
 	OperatingSystemOracleLinux           OperatingSystem = "ORACLE_LINUX"
 	OperatingSystemDebian                OperatingSystem = "DEBIAN"
 	OperatingSystemMacOS                 OperatingSystem = "MACOS"
+	OperatingSystemRaspbian              OperatingSystem = "RASPBIAN"
 )
 
 // Values returns all known values for OperatingSystem. Note that this can be
@@ -1134,6 +1135,7 @@ func (OperatingSystem) Values() []OperatingSystem {
 		"ORACLE_LINUX",
 		"DEBIAN",
 		"MACOS",
+		"RASPBIAN",
 	}
 }
 
@@ -1686,6 +1688,7 @@ type PlatformType string
 const (
 	PlatformTypeWindows PlatformType = "Windows"
 	PlatformTypeLinux   PlatformType = "Linux"
+	PlatformTypeMacos   PlatformType = "MacOS"
 )
 
 // Values returns all known values for PlatformType. Note that this can be expanded
@@ -1695,6 +1698,7 @@ func (PlatformType) Values() []PlatformType {
 	return []PlatformType{
 		"Windows",
 		"Linux",
+		"MacOS",
 	}
 }
 
@@ -1893,6 +1897,26 @@ func (SignalType) Values() []SignalType {
 		"StartStep",
 		"StopStep",
 		"Resume",
+	}
+}
+
+type SourceType string
+
+// Enum values for SourceType
+const (
+	SourceTypeAwsEc2Instance        SourceType = "AWS::EC2::Instance"
+	SourceTypeAwsIotThing           SourceType = "AWS::IoT::Thing"
+	SourceTypeAwsSsmManagedinstance SourceType = "AWS::SSM::ManagedInstance"
+)
+
+// Values returns all known values for SourceType. Note that this can be expanded
+// in the future, and so it is only as up to date as the client. The ordering of
+// this slice is not guaranteed to be stable across updates.
+func (SourceType) Values() []SourceType {
+	return []SourceType{
+		"AWS::EC2::Instance",
+		"AWS::IoT::Thing",
+		"AWS::SSM::ManagedInstance",
 	}
 }
 
