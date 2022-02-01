@@ -4,13 +4,13 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/aws/aws-sdk-go-v2/feature/ec2/imds"
 	"io"
 	"io/ioutil"
 	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/ec2/imds"
 )
 
 // CredentialsSourceName provides a name of the provider when config is
@@ -59,6 +59,12 @@ const (
 	awsEc2MetadataDisabled = "AWS_EC2_METADATA_DISABLED"
 
 	awsS3DisableMultiRegionAccessPointEnvVar = "AWS_S3_DISABLE_MULTIREGION_ACCESS_POINTS"
+
+	awsUseDualStackEndpoint = "AWS_USE_DUALSTACK_ENDPOINT"
+
+	awsUseFIPSEndpoint = "AWS_USE_FIPS_ENDPOINT"
+
+	awsDefaultMode = "AWS_DEFAULTS_MODE"
 )
 
 var (
@@ -210,6 +216,23 @@ type EnvConfig struct {
 	//
 	// AWS_S3_DISABLE_MULTIREGION_ACCESS_POINTS=true
 	S3DisableMultiRegionAccessPoints *bool
+
+	// Specifies that SDK clients must resolve a dual-stack endpoint for
+	// services.
+	//
+	// AWS_USE_DUALSTACK_ENDPOINT=true
+	UseDualStackEndpoint aws.DualStackEndpointState
+
+	// Specifies that SDK clients must resolve a FIPS endpoint for
+	// services.
+	//
+	// AWS_USE_FIPS_ENDPOINT=true
+	UseFIPSEndpoint aws.FIPSEndpointState
+
+	// Specifies the SDk Defaults Mode used by services.
+	//
+	// AWS_DEFAULTS_MODE=standard
+	DefaultsMode aws.DefaultsMode
 }
 
 // loadEnvConfig reads configuration values from the OS's environment variables.
@@ -268,7 +291,26 @@ func NewEnvConfig() (EnvConfig, error) {
 		return cfg, err
 	}
 
+	if err := setUseDualStackEndpointFromEnvVal(&cfg.UseDualStackEndpoint, []string{awsUseDualStackEndpoint}); err != nil {
+		return cfg, err
+	}
+
+	if err := setUseFIPSEndpointFromEnvVal(&cfg.UseFIPSEndpoint, []string{awsUseFIPSEndpoint}); err != nil {
+		return cfg, err
+	}
+
+	if err := setDefaultsModeFromEnvVal(&cfg.DefaultsMode, []string{awsDefaultMode}); err != nil {
+		return cfg, err
+	}
+
 	return cfg, nil
+}
+
+func (c EnvConfig) getDefaultsMode(ctx context.Context) (aws.DefaultsMode, bool, error) {
+	if len(c.DefaultsMode) == 0 {
+		return "", false, nil
+	}
+	return c.DefaultsMode, true, nil
 }
 
 func setEC2IMDSClientEnableState(state *imds.ClientEnableState, keys []string) {
@@ -287,6 +329,18 @@ func setEC2IMDSClientEnableState(state *imds.ClientEnableState, keys []string) {
 		}
 		break
 	}
+}
+
+func setDefaultsModeFromEnvVal(mode *aws.DefaultsMode, keys []string) error {
+	for _, k := range keys {
+		if value := os.Getenv(k); len(value) > 0 {
+			if ok := mode.SetFromString(value); !ok {
+				return fmt.Errorf("invalid %s value: %s", k, value)
+			}
+			break
+		}
+	}
+	return nil
 }
 
 func setEC2IMDSEndpointMode(mode *imds.EndpointModeState, keys []string) error {
@@ -385,6 +439,26 @@ func (c EnvConfig) GetS3DisableMultRegionAccessPoints(ctx context.Context) (valu
 	return *c.S3DisableMultiRegionAccessPoints, true, nil
 }
 
+// GetUseDualStackEndpoint returns whether the service's dual-stack endpoint should be
+// used for requests.
+func (c EnvConfig) GetUseDualStackEndpoint(ctx context.Context) (value aws.DualStackEndpointState, found bool, err error) {
+	if c.UseDualStackEndpoint == aws.DualStackEndpointStateUnset {
+		return aws.DualStackEndpointStateUnset, false, nil
+	}
+
+	return c.UseDualStackEndpoint, true, nil
+}
+
+// GetUseFIPSEndpoint returns whether the service's FIPS endpoint should be
+// used for requests.
+func (c EnvConfig) GetUseFIPSEndpoint(ctx context.Context) (value aws.FIPSEndpointState, found bool, err error) {
+	if c.UseFIPSEndpoint == aws.FIPSEndpointStateUnset {
+		return aws.FIPSEndpointStateUnset, false, nil
+	}
+
+	return c.UseFIPSEndpoint, true, nil
+}
+
 func setStringFromEnvVal(dst *string, keys []string) {
 	for _, k := range keys {
 		if v := os.Getenv(k); len(v) > 0 {
@@ -438,6 +512,48 @@ func setEndpointDiscoveryTypeFromEnvVal(dst *aws.EndpointDiscoveryEnableState, k
 		default:
 			return fmt.Errorf(
 				"invalid value for environment variable, %s=%s, need true, false or auto",
+				k, value)
+		}
+	}
+	return nil
+}
+
+func setUseDualStackEndpointFromEnvVal(dst *aws.DualStackEndpointState, keys []string) error {
+	for _, k := range keys {
+		value := os.Getenv(k)
+		if len(value) == 0 {
+			continue // skip if empty
+		}
+
+		switch {
+		case strings.EqualFold(value, "true"):
+			*dst = aws.DualStackEndpointStateEnabled
+		case strings.EqualFold(value, "false"):
+			*dst = aws.DualStackEndpointStateDisabled
+		default:
+			return fmt.Errorf(
+				"invalid value for environment variable, %s=%s, need true, false",
+				k, value)
+		}
+	}
+	return nil
+}
+
+func setUseFIPSEndpointFromEnvVal(dst *aws.FIPSEndpointState, keys []string) error {
+	for _, k := range keys {
+		value := os.Getenv(k)
+		if len(value) == 0 {
+			continue // skip if empty
+		}
+
+		switch {
+		case strings.EqualFold(value, "true"):
+			*dst = aws.FIPSEndpointStateEnabled
+		case strings.EqualFold(value, "false"):
+			*dst = aws.FIPSEndpointStateDisabled
+		default:
+			return fmt.Errorf(
+				"invalid value for environment variable, %s=%s, need true, false",
 				k, value)
 		}
 	}
