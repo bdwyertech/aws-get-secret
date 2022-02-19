@@ -24,6 +24,6 @@ release:
       fi
       && /bin/ln -sfn ${CI_PROJECT_DIR}/.cache/aws-get-secret /usr/local/bin/aws-get-secret
   script:
-    - export MY_SECRET=$(aws-get-secret $SECRET -r $SECRET_ROLE_ARN -e $SECRET_ROLE_EXT_ID)
+    - export MY_SECRET=$(aws-get-secret $SECRET -r $SECRET_ROLE_ARN -e $SECRET_ROLE_EXT_ID) && test -n "$MY_SECRET"
     - goreleaser release
 ```
