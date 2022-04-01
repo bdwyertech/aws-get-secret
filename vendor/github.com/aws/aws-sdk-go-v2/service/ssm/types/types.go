@@ -74,13 +74,15 @@ type Association struct {
 	// The association version.
 	AssociationVersion *string
 
-	// The version of the document used in the association. State Manager doesn't
-	// support running associations that use a new version of a document if that
-	// document is shared from another account. State Manager always runs the default
-	// version of a document if shared from another account, even though the Systems
-	// Manager console shows that a new version was processed. If you want to run an
-	// association using a new version of a document shared form another account, you
-	// must set the document version to default.
+	// The version of the document used in the association. If you change a document
+	// version for a State Manager association, Systems Manager immediately runs the
+	// association unless you previously specifed the apply-only-at-cron-interval
+	// parameter. State Manager doesn't support running associations that use a new
+	// version of a document if that document is shared from another account. State
+	// Manager always runs the default version of a document if shared from another
+	// account, even though the Systems Manager console shows that a new version was
+	// processed. If you want to run an association using a new version of a document
+	// shared form another account, you must set the document version to default.
 	DocumentVersion *string
 
 	// The managed node ID.
@@ -1791,17 +1793,15 @@ type DocumentIdentifier struct {
 //
 // * Command
 //
-// * DeploymentStrategy
-//
 // * Package
 //
-// *
-// Policy
+// * Policy
 //
 // * Session
 //
-// Owner Note that only one Owner can be specified in a request.
-// For example: Key=Owner,Values=Self.
+// Owner
+// Note that only one Owner can be specified in a request. For example:
+// Key=Owner,Values=Self.
 //
 // * Amazon
 //
@@ -3134,10 +3134,24 @@ type MaintenanceWindowTask struct {
 	// window task types, see MaintenanceWindowTaskInvocationParameters.
 	LoggingInfo *LoggingInfo
 
-	// The maximum number of targets this task can be run for, in parallel.
+	// The maximum number of targets this task can be run for, in parallel. Although
+	// this element is listed as "Required: No", a value can be omitted only when you
+	// are registering or updating a targetless task
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html)
+	// You must provide a value in all other cases. For maintenance window tasks
+	// without a target specified, you can't supply a value for this option. Instead,
+	// the system inserts a placeholder value of 1. This value doesn't affect the
+	// running of your task.
 	MaxConcurrency *string
 
 	// The maximum number of errors allowed before this task stops being scheduled.
+	// Although this element is listed as "Required: No", a value can be omitted only
+	// when you are registering or updating a targetless task
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html)
+	// You must provide a value in all other cases. For maintenance window tasks
+	// without a target specified, you can't supply a value for this option. Instead,
+	// the system inserts a placeholder value of 1. This value doesn't affect the
+	// running of your task.
 	MaxErrors *string
 
 	// The task name.
@@ -3756,10 +3770,12 @@ type Parameter struct {
 	SourceResult *string
 
 	// The type of parameter. Valid values include the following: String, StringList,
-	// and SecureString.
+	// and SecureString. If type is StringList, the system returns a comma-separated
+	// string with no spaces between commas in the Value field.
 	Type ParameterType
 
-	// The parameter value.
+	// The parameter value. If type is StringList, the system returns a comma-separated
+	// string with no spaces between commas in the Value field.
 	Value *string
 
 	// The parameter version.
@@ -3830,8 +3846,8 @@ type ParameterInlinePolicy struct {
 	// The JSON text of the policy.
 	PolicyText *string
 
-	// The type of policy. Parameter Store, a capablility of Amazon Web Services
-	// Systems Manager, supports the following policy types: Expiration,
+	// The type of policy. Parameter Store, a capability of Amazon Web Services Systems
+	// Manager, supports the following policy types: Expiration,
 	// ExpirationNotification, and NoChangeNotification.
 	PolicyType *string
 
@@ -4067,7 +4083,7 @@ type PatchComplianceData struct {
 	// This member is required.
 	KBId *string
 
-	// The severity of the patchsuch as Critical, Important, and Moderate.
+	// The severity of the patch such as Critical, Important, and Moderate.
 	//
 	// This member is required.
 	Severity *string
