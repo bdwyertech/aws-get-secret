@@ -8071,6 +8071,11 @@ func awsAwsjson11_serializeDocumentCreateAssociationBatchRequestEntry(v *types.C
 		ok.String(*v.ScheduleExpression)
 	}
 
+	if v.ScheduleOffset != 0 {
+		ok := object.Key("ScheduleOffset")
+		ok.Integer(v.ScheduleOffset)
+	}
+
 	if len(v.SyncCompliance) > 0 {
 		ok := object.Key("SyncCompliance")
 		ok.String(string(v.SyncCompliance))
@@ -10009,6 +10014,13 @@ func awsAwsjson11_serializeDocumentRunbook(v *types.Runbook, value smithyjson.Va
 		}
 	}
 
+	if v.TargetMaps != nil {
+		ok := object.Key("TargetMaps")
+		if err := awsAwsjson11_serializeDocumentTargetMaps(v.TargetMaps, ok); err != nil {
+			return err
+		}
+	}
+
 	if v.TargetParameterName != nil {
 		ok := object.Key("TargetParameterName")
 		ok.String(*v.TargetParameterName)
@@ -10550,6 +10562,11 @@ func awsAwsjson11_serializeOpDocumentCreateAssociationInput(v *CreateAssociation
 	if v.ScheduleExpression != nil {
 		ok := object.Key("ScheduleExpression")
 		ok.String(*v.ScheduleExpression)
+	}
+
+	if v.ScheduleOffset != 0 {
+		ok := object.Key("ScheduleOffset")
+		ok.Integer(v.ScheduleOffset)
 	}
 
 	if len(v.SyncCompliance) > 0 {
@@ -13838,6 +13855,11 @@ func awsAwsjson11_serializeOpDocumentUpdateAssociationInput(v *UpdateAssociation
 	if v.ScheduleExpression != nil {
 		ok := object.Key("ScheduleExpression")
 		ok.String(*v.ScheduleExpression)
+	}
+
+	if v.ScheduleOffset != 0 {
+		ok := object.Key("ScheduleOffset")
+		ok.Integer(v.ScheduleOffset)
 	}
 
 	if len(v.SyncCompliance) > 0 {
