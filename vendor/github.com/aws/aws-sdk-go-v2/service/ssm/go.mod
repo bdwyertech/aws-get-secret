@@ -3,10 +3,10 @@ module github.com/aws/aws-sdk-go-v2/service/ssm
 go 1.15
 
 require (
-	github.com/aws/aws-sdk-go-v2 v1.13.0
-	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.4
-	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.2.0
-	github.com/aws/smithy-go v1.10.0
+	github.com/aws/aws-sdk-go-v2 v1.16.7
+	github.com/aws/aws-sdk-go-v2/internal/configsources v1.1.14
+	github.com/aws/aws-sdk-go-v2/internal/endpoints/v2 v2.4.8
+	github.com/aws/smithy-go v1.12.0
 	github.com/jmespath/go-jmespath v0.4.0
 )
 

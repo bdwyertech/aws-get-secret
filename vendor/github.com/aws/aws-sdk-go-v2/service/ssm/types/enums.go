@@ -1118,6 +1118,7 @@ const (
 	OperatingSystemDebian                OperatingSystem = "DEBIAN"
 	OperatingSystemMacOS                 OperatingSystem = "MACOS"
 	OperatingSystemRaspbian              OperatingSystem = "RASPBIAN"
+	OperatingSystemRockyLinux            OperatingSystem = "ROCKY_LINUX"
 )
 
 // Values returns all known values for OperatingSystem. Note that this can be
@@ -1136,6 +1137,7 @@ func (OperatingSystem) Values() []OperatingSystem {
 		"DEBIAN",
 		"MACOS",
 		"RASPBIAN",
+		"ROCKY_LINUX",
 	}
 }
 
@@ -1767,6 +1769,7 @@ const (
 	ResourceTypeForTaggingPatchBaseline     ResourceTypeForTagging = "PatchBaseline"
 	ResourceTypeForTaggingOpsItem           ResourceTypeForTagging = "OpsItem"
 	ResourceTypeForTaggingOpsmetadata       ResourceTypeForTagging = "OpsMetadata"
+	ResourceTypeForTaggingAutomation        ResourceTypeForTagging = "Automation"
 )
 
 // Values returns all known values for ResourceTypeForTagging. Note that this can
@@ -1781,6 +1784,7 @@ func (ResourceTypeForTagging) Values() []ResourceTypeForTagging {
 		"PatchBaseline",
 		"OpsItem",
 		"OpsMetadata",
+		"Automation",
 	}
 }
 

@@ -74,13 +74,15 @@ type Association struct {
 	// The association version.
 	AssociationVersion *string
 
-	// The version of the document used in the association. State Manager doesn't
-	// support running associations that use a new version of a document if that
-	// document is shared from another account. State Manager always runs the default
-	// version of a document if shared from another account, even though the Systems
-	// Manager console shows that a new version was processed. If you want to run an
-	// association using a new version of a document shared form another account, you
-	// must set the document version to default.
+	// The version of the document used in the association. If you change a document
+	// version for a State Manager association, Systems Manager immediately runs the
+	// association unless you previously specifed the apply-only-at-cron-interval
+	// parameter. State Manager doesn't support running associations that use a new
+	// version of a document if that document is shared from another account. State
+	// Manager always runs the default version of a document if shared from another
+	// account, even though the Systems Manager console shows that a new version was
+	// processed. If you want to run an association using a new version of a document
+	// shared form another account, you must set the document version to default.
 	DocumentVersion *string
 
 	// The managed node ID.
@@ -98,6 +100,13 @@ type Association struct {
 	// A cron expression that specifies a schedule when the association runs. The
 	// schedule runs in Coordinated Universal Time (UTC).
 	ScheduleExpression *string
+
+	// Number of days to wait after the scheduled day to run an association.
+	ScheduleOffset int32
+
+	// A key-value mapping of document parameters to target resources. Both Targets and
+	// TargetMaps can't be specified together.
+	TargetMaps []map[string][]string
 
 	// The managed nodes targeted by the request to create an association. You can
 	// target all managed nodes in an Amazon Web Services account by specifying the
@@ -198,6 +207,9 @@ type AssociationDescription struct {
 	// A cron expression that specifies a schedule when the association runs.
 	ScheduleExpression *string
 
+	// Number of days to wait after the scheduled day to run an association.
+	ScheduleOffset int32
+
 	// The association status.
 	Status *AssociationStatus
 
@@ -215,6 +227,10 @@ type AssociationDescription struct {
 	// The combination of Amazon Web Services Regions and Amazon Web Services accounts
 	// where you want to run the association.
 	TargetLocations []TargetLocation
+
+	// A key-value mapping of document parameters to target resources. Both Targets and
+	// TargetMaps can't be specified together.
+	TargetMaps []map[string][]string
 
 	// The managed nodes targeted by the request.
 	Targets []Target
@@ -453,6 +469,9 @@ type AssociationVersionInfo struct {
 	// version was created.
 	ScheduleExpression *string
 
+	// Number of days to wait after the scheduled day to run an association.
+	ScheduleOffset int32
+
 	// The mode for generating association compliance. You can specify AUTO or MANUAL.
 	// In AUTO mode, the system uses the status of the association execution to
 	// determine the compliance status. If the association execution runs successfully,
@@ -468,6 +487,10 @@ type AssociationVersionInfo struct {
 	// where you wanted to run the association when this association version was
 	// created.
 	TargetLocations []TargetLocation
+
+	// A key-value mapping of document parameters to target resources. Both Targets and
+	// TargetMaps can't be specified together.
+	TargetMaps []map[string][]string
 
 	// The targets specified for the association when the association version was
 	// created.
@@ -869,9 +892,12 @@ type Command struct {
 	// The number of targets for which the status is Failed or Execution Timed Out.
 	ErrorCount int32
 
-	// If this time is reached and the command hasn't already started running, it won't
-	// run. Calculated based on the ExpiresAfter user input provided as part of the
-	// SendCommand API operation.
+	// If a command expires, it changes status to DeliveryTimedOut for all invocations
+	// that have the status InProgress, Pending, or Delayed. ExpiresAfter is calculated
+	// based on the total timeout for the overall command. For more information, see
+	// Understanding command timeout values
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/monitor-commands.html?icmpid=docs_ec2_console#monitor-about-status-timeouts)
+	// in the Amazon Web Services Systems Manager User Guide.
 	ExpiresAfter *time.Time
 
 	// The managed node IDs against which this command was requested.
@@ -966,6 +992,9 @@ type Command struct {
 	// of managed nodes targeted by the command exceeded the account limit for pending
 	// invocations. The system has canceled the command before running it on any
 	// managed node. This is a terminal state.
+	//
+	// * Delayed: The system attempted to send
+	// the command to the managed node but wasn't successful. The system retries again.
 	StatusDetails *string
 
 	// The number of targets for the command.
@@ -1198,6 +1227,9 @@ type CommandInvocation struct {
 	// * Terminated: The parent command exceeded its MaxErrors limit and
 	// subsequent command invocations were canceled by the system. This is a terminal
 	// state.
+	//
+	// * Delayed: The system attempted to send the command to the managed node
+	// but wasn't successful. The system retries again.
 	StatusDetails *string
 
 	// Gets the trace output sent by the agent.
@@ -1540,6 +1572,9 @@ type CreateAssociationBatchRequestEntry struct {
 	// A cron expression that specifies a schedule when the association runs.
 	ScheduleExpression *string
 
+	// Number of days to wait after the scheduled day to run an association.
+	ScheduleOffset int32
+
 	// The mode for generating association compliance. You can specify AUTO or MANUAL.
 	// In AUTO mode, the system uses the status of the association execution to
 	// determine the compliance status. If the association execution runs successfully,
@@ -1554,6 +1589,10 @@ type CreateAssociationBatchRequestEntry struct {
 	// Use this action to create an association in multiple Regions and multiple
 	// accounts.
 	TargetLocations []TargetLocation
+
+	// A key-value mapping of document parameters to target resources. Both Targets and
+	// TargetMaps can't be specified together.
+	TargetMaps []map[string][]string
 
 	// The managed nodes targeted by the request.
 	Targets []Target
@@ -1791,17 +1830,15 @@ type DocumentIdentifier struct {
 //
 // * Command
 //
-// * DeploymentStrategy
-//
 // * Package
 //
-// *
-// Policy
+// * Policy
 //
 // * Session
 //
-// Owner Note that only one Owner can be specified in a request.
-// For example: Key=Owner,Values=Self.
+// Owner
+// Note that only one Owner can be specified in a request. For example:
+// Key=Owner,Values=Self.
 //
 // * Amazon
 //
@@ -3134,10 +3171,24 @@ type MaintenanceWindowTask struct {
 	// window task types, see MaintenanceWindowTaskInvocationParameters.
 	LoggingInfo *LoggingInfo
 
-	// The maximum number of targets this task can be run for, in parallel.
+	// The maximum number of targets this task can be run for, in parallel. Although
+	// this element is listed as "Required: No", a value can be omitted only when you
+	// are registering or updating a targetless task
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html)
+	// You must provide a value in all other cases. For maintenance window tasks
+	// without a target specified, you can't supply a value for this option. Instead,
+	// the system inserts a placeholder value of 1. This value doesn't affect the
+	// running of your task.
 	MaxConcurrency *string
 
 	// The maximum number of errors allowed before this task stops being scheduled.
+	// Although this element is listed as "Required: No", a value can be omitted only
+	// when you are registering or updating a targetless task
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/maintenance-windows-targetless-tasks.html)
+	// You must provide a value in all other cases. For maintenance window tasks
+	// without a target specified, you can't supply a value for this option. Instead,
+	// the system inserts a placeholder value of 1. This value doesn't affect the
+	// running of your task.
 	MaxErrors *string
 
 	// The task name.
@@ -3756,10 +3807,12 @@ type Parameter struct {
 	SourceResult *string
 
 	// The type of parameter. Valid values include the following: String, StringList,
-	// and SecureString.
+	// and SecureString. If type is StringList, the system returns a comma-separated
+	// string with no spaces between commas in the Value field.
 	Type ParameterType
 
-	// The parameter value.
+	// The parameter value. If type is StringList, the system returns a comma-separated
+	// string with no spaces between commas in the Value field.
 	Value *string
 
 	// The parameter version.
@@ -3830,8 +3883,8 @@ type ParameterInlinePolicy struct {
 	// The JSON text of the policy.
 	PolicyText *string
 
-	// The type of policy. Parameter Store, a capablility of Amazon Web Services
-	// Systems Manager, supports the following policy types: Expiration,
+	// The type of policy. Parameter Store, a capability of Amazon Web Services Systems
+	// Manager, supports the following policy types: Expiration,
 	// ExpirationNotification, and NoChangeNotification.
 	PolicyType *string
 
@@ -4067,7 +4120,7 @@ type PatchComplianceData struct {
 	// This member is required.
 	KBId *string
 
-	// The severity of the patchsuch as Critical, Important, and Moderate.
+	// The severity of the patch such as Critical, Important, and Moderate.
 	//
 	// This member is required.
 	Severity *string
@@ -4613,6 +4666,10 @@ type Runbook struct {
 	// accounts targeted by the current Runbook operation.
 	TargetLocations []TargetLocation
 
+	// A key-value mapping of runbook parameters to target resources. Both Targets and
+	// TargetMaps can't be specified together.
+	TargetMaps []map[string][]string
+
 	// The name of the parameter used as the target resource for the rate-controlled
 	// runbook workflow. Required if you specify Targets.
 	TargetParameterName *string
@@ -4820,7 +4877,7 @@ type SessionManagerOutputUrl struct {
 type SeveritySummary struct {
 
 	// The total number of resources or compliance items that have a severity level of
-	// critical. Critical severity is determined by the organization that published the
+	// Critical. Critical severity is determined by the organization that published the
 	// compliance items.
 	CriticalCount int32
 
