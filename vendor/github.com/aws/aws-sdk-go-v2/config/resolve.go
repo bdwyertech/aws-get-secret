@@ -21,9 +21,15 @@ import (
 // This should be used as the first resolver in the slice of resolvers when
 // resolving external configuration.
 func resolveDefaultAWSConfig(ctx context.Context, cfg *aws.Config, cfgs configs) error {
+	var sources []interface{}
+	for _, s := range cfgs {
+		sources = append(sources, s)
+	}
+
 	*cfg = aws.Config{
-		Credentials: aws.AnonymousCredentials{},
-		Logger:      logging.NewStandardLogger(os.Stderr),
+		Credentials:   aws.AnonymousCredentials{},
+		Logger:        logging.NewStandardLogger(os.Stderr),
+		ConfigSources: sources,
 	}
 	return nil
 }
@@ -216,13 +222,17 @@ func resolveRetryer(ctx context.Context, cfg *aws.Config, configs configs) error
 	if err != nil {
 		return err
 	}
-	if !found {
+
+	if found {
+		cfg.Retryer = retryer
 		return nil
 	}
 
-	cfg.Retryer = retryer
-
-	return nil
+	// Only load the retry options if a custom retryer has not be specified.
+	if err = resolveRetryMaxAttempts(ctx, cfg, configs); err != nil {
+		return err
+	}
+	return resolveRetryMode(ctx, cfg, configs)
 }
 
 func resolveEC2IMDSRegion(ctx context.Context, cfg *aws.Config, configs configs) error {
@@ -272,6 +282,26 @@ func resolveDefaultsModeOptions(ctx context.Context, cfg *aws.Config, configs co
 
 	cfg.DefaultsMode = defaultsMode
 	cfg.RuntimeEnvironment = environment
+
+	return nil
+}
+
+func resolveRetryMaxAttempts(ctx context.Context, cfg *aws.Config, configs configs) error {
+	maxAttempts, found, err := getRetryMaxAttempts(ctx, configs)
+	if err != nil || !found {
+		return err
+	}
+	cfg.RetryMaxAttempts = maxAttempts
+
+	return nil
+}
+
+func resolveRetryMode(ctx context.Context, cfg *aws.Config, configs configs) error {
+	retryMode, found, err := getRetryMode(ctx, configs)
+	if err != nil || !found {
+		return err
+	}
+	cfg.RetryMode = retryMode
 
 	return nil
 }
