@@ -755,6 +755,8 @@ const (
 	DocumentTypeChangeTemplate                 DocumentType = "Automation.ChangeTemplate"
 	DocumentTypeProblemAnalysis                DocumentType = "ProblemAnalysis"
 	DocumentTypeProblemAnalysisTemplate        DocumentType = "ProblemAnalysisTemplate"
+	DocumentTypeCloudFormation                 DocumentType = "CloudFormation"
+	DocumentTypeConformancePackTemplate        DocumentType = "ConformancePackTemplate"
 )
 
 // Values returns all known values for DocumentType. Note that this can be expanded
@@ -774,6 +776,8 @@ func (DocumentType) Values() []DocumentType {
 		"Automation.ChangeTemplate",
 		"ProblemAnalysis",
 		"ProblemAnalysisTemplate",
+		"CloudFormation",
+		"ConformancePackTemplate",
 	}
 }
 
@@ -792,6 +796,24 @@ func (ExecutionMode) Values() []ExecutionMode {
 	return []ExecutionMode{
 		"Auto",
 		"Interactive",
+	}
+}
+
+type ExternalAlarmState string
+
+// Enum values for ExternalAlarmState
+const (
+	ExternalAlarmStateUnknown ExternalAlarmState = "UNKNOWN"
+	ExternalAlarmStateAlarm   ExternalAlarmState = "ALARM"
+)
+
+// Values returns all known values for ExternalAlarmState. Note that this can be
+// expanded in the future, and so it is only as up to date as the client. The
+// ordering of this slice is not guaranteed to be stable across updates.
+func (ExternalAlarmState) Values() []ExternalAlarmState {
+	return []ExternalAlarmState{
+		"UNKNOWN",
+		"ALARM",
 	}
 }
 
@@ -1118,6 +1140,7 @@ const (
 	OperatingSystemDebian                OperatingSystem = "DEBIAN"
 	OperatingSystemMacOS                 OperatingSystem = "MACOS"
 	OperatingSystemRaspbian              OperatingSystem = "RASPBIAN"
+	OperatingSystemRockyLinux            OperatingSystem = "ROCKY_LINUX"
 )
 
 // Values returns all known values for OperatingSystem. Note that this can be
@@ -1136,6 +1159,7 @@ func (OperatingSystem) Values() []OperatingSystem {
 		"DEBIAN",
 		"MACOS",
 		"RASPBIAN",
+		"ROCKY_LINUX",
 	}
 }
 
@@ -1767,6 +1791,8 @@ const (
 	ResourceTypeForTaggingPatchBaseline     ResourceTypeForTagging = "PatchBaseline"
 	ResourceTypeForTaggingOpsItem           ResourceTypeForTagging = "OpsItem"
 	ResourceTypeForTaggingOpsmetadata       ResourceTypeForTagging = "OpsMetadata"
+	ResourceTypeForTaggingAutomation        ResourceTypeForTagging = "Automation"
+	ResourceTypeForTaggingAssociation       ResourceTypeForTagging = "Association"
 )
 
 // Values returns all known values for ResourceTypeForTagging. Note that this can
@@ -1781,6 +1807,8 @@ func (ResourceTypeForTagging) Values() []ResourceTypeForTagging {
 		"PatchBaseline",
 		"OpsItem",
 		"OpsMetadata",
+		"Automation",
+		"Association",
 	}
 }
 

@@ -55,6 +55,10 @@ type CreateAssociationInput struct {
 	// This member is required.
 	Name *string
 
+	// The details for the CloudWatch alarm you want to apply to an automation or
+	// command.
+	AlarmConfiguration *types.AlarmConfiguration
+
 	// By default, when you create a new association, the system runs it immediately
 	// after it is created and then according to the schedule you specified. Specify
 	// this option if you don't want an association to run immediately after you create
@@ -133,6 +137,17 @@ type CreateAssociationInput struct {
 	// A cron expression when the association will be applied to the target(s).
 	ScheduleExpression *string
 
+	// Number of days to wait after the scheduled day to run an association. For
+	// example, if you specified a cron schedule of cron(0 0 ? * THU#2 *), you could
+	// specify an offset of 3 to run the association each Sunday after the second
+	// Thursday of the month. For more information about cron schedules for
+	// associations, see Reference: Cron and rate expressions for Systems Manager
+	// (https://docs.aws.amazon.com/systems-manager/latest/userguide/reference-cron-and-rate-expressions.html)
+	// in the Amazon Web Services Systems Manager User Guide. To use offsets, you must
+	// specify the ApplyOnlyAtCronInterval parameter. This option tells the system not
+	// to run an association immediately after you create it.
+	ScheduleOffset *int32
+
 	// The mode for generating association compliance. You can specify AUTO or MANUAL.
 	// In AUTO mode, the system uses the status of the association execution to
 	// determine the compliance status. If the association execution runs successfully,
@@ -144,10 +159,20 @@ type CreateAssociationInput struct {
 	// associations use AUTO mode.
 	SyncCompliance types.AssociationSyncCompliance
 
+	// Optional metadata that you assign to a resource. Tags enable you to categorize a
+	// resource in different ways, such as by purpose, owner, or environment. For
+	// example, you might want to tag an association to identify the type of resource
+	// to which it applies, the environment, or the purpose of the association.
+	Tags []types.Tag
+
 	// A location is a combination of Amazon Web Services Regions and Amazon Web
 	// Services accounts where you want to run the association. Use this action to
 	// create an association in multiple Regions and multiple accounts.
 	TargetLocations []types.TargetLocation
+
+	// A key-value mapping of document parameters to target resources. Both Targets and
+	// TargetMaps can't be specified together.
+	TargetMaps []map[string][]string
 
 	// The targets for the association. You can target managed nodes by using tags,
 	// Amazon Web Services resource groups, all managed nodes in an Amazon Web Services

@@ -739,8 +739,14 @@ func awsAwsjson11_deserializeOpErrorCreateAssociation(response *smithyhttp.Respo
 	case strings.EqualFold("InvalidSchedule", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidSchedule(response, errorBody)
 
+	case strings.EqualFold("InvalidTag", errorCode):
+		return awsAwsjson11_deserializeErrorInvalidTag(response, errorBody)
+
 	case strings.EqualFold("InvalidTarget", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidTarget(response, errorBody)
+
+	case strings.EqualFold("InvalidTargetMaps", errorCode):
+		return awsAwsjson11_deserializeErrorInvalidTargetMaps(response, errorBody)
 
 	case strings.EqualFold("UnsupportedPlatformType", errorCode):
 		return awsAwsjson11_deserializeErrorUnsupportedPlatformType(response, errorBody)
@@ -882,6 +888,9 @@ func awsAwsjson11_deserializeOpErrorCreateAssociationBatch(response *smithyhttp.
 
 	case strings.EqualFold("InvalidTarget", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidTarget(response, errorBody)
+
+	case strings.EqualFold("InvalidTargetMaps", errorCode):
+		return awsAwsjson11_deserializeErrorInvalidTargetMaps(response, errorBody)
 
 	case strings.EqualFold("UnsupportedPlatformType", errorCode):
 		return awsAwsjson11_deserializeErrorUnsupportedPlatformType(response, errorBody)
@@ -14257,9 +14266,6 @@ func awsAwsjson11_deserializeOpErrorTerminateSession(response *smithyhttp.Respon
 	}
 
 	switch {
-	case strings.EqualFold("DoesNotExistException", errorCode):
-		return awsAwsjson11_deserializeErrorDoesNotExistException(response, errorBody)
-
 	case strings.EqualFold("InternalServerError", errorCode):
 		return awsAwsjson11_deserializeErrorInternalServerError(response, errorBody)
 
@@ -14520,6 +14526,9 @@ func awsAwsjson11_deserializeOpErrorUpdateAssociation(response *smithyhttp.Respo
 
 	case strings.EqualFold("InvalidTarget", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidTarget(response, errorBody)
+
+	case strings.EqualFold("InvalidTargetMaps", errorCode):
+		return awsAwsjson11_deserializeErrorInvalidTargetMaps(response, errorBody)
 
 	case strings.EqualFold("InvalidUpdate", errorCode):
 		return awsAwsjson11_deserializeErrorInvalidUpdate(response, errorBody)
@@ -18649,6 +18658,41 @@ func awsAwsjson11_deserializeErrorInvalidSchedule(response *smithyhttp.Response,
 	return output
 }
 
+func awsAwsjson11_deserializeErrorInvalidTag(response *smithyhttp.Response, errorBody *bytes.Reader) error {
+	var buff [1024]byte
+	ringBuffer := smithyio.NewRingBuffer(buff[:])
+
+	body := io.TeeReader(errorBody, ringBuffer)
+	decoder := json.NewDecoder(body)
+	decoder.UseNumber()
+	var shape interface{}
+	if err := decoder.Decode(&shape); err != nil && err != io.EOF {
+		var snapshot bytes.Buffer
+		io.Copy(&snapshot, ringBuffer)
+		err = &smithy.DeserializationError{
+			Err:      fmt.Errorf("failed to decode response body, %w", err),
+			Snapshot: snapshot.Bytes(),
+		}
+		return err
+	}
+
+	output := &types.InvalidTag{}
+	err := awsAwsjson11_deserializeDocumentInvalidTag(&output, shape)
+
+	if err != nil {
+		var snapshot bytes.Buffer
+		io.Copy(&snapshot, ringBuffer)
+		err = &smithy.DeserializationError{
+			Err:      fmt.Errorf("failed to decode response body, %w", err),
+			Snapshot: snapshot.Bytes(),
+		}
+		return err
+	}
+
+	errorBody.Seek(0, io.SeekStart)
+	return output
+}
+
 func awsAwsjson11_deserializeErrorInvalidTarget(response *smithyhttp.Response, errorBody *bytes.Reader) error {
 	var buff [1024]byte
 	ringBuffer := smithyio.NewRingBuffer(buff[:])
@@ -18669,6 +18713,41 @@ func awsAwsjson11_deserializeErrorInvalidTarget(response *smithyhttp.Response, e
 
 	output := &types.InvalidTarget{}
 	err := awsAwsjson11_deserializeDocumentInvalidTarget(&output, shape)
+
+	if err != nil {
+		var snapshot bytes.Buffer
+		io.Copy(&snapshot, ringBuffer)
+		err = &smithy.DeserializationError{
+			Err:      fmt.Errorf("failed to decode response body, %w", err),
+			Snapshot: snapshot.Bytes(),
+		}
+		return err
+	}
+
+	errorBody.Seek(0, io.SeekStart)
+	return output
+}
+
+func awsAwsjson11_deserializeErrorInvalidTargetMaps(response *smithyhttp.Response, errorBody *bytes.Reader) error {
+	var buff [1024]byte
+	ringBuffer := smithyio.NewRingBuffer(buff[:])
+
+	body := io.TeeReader(errorBody, ringBuffer)
+	decoder := json.NewDecoder(body)
+	decoder.UseNumber()
+	var shape interface{}
+	if err := decoder.Decode(&shape); err != nil && err != io.EOF {
+		var snapshot bytes.Buffer
+		io.Copy(&snapshot, ringBuffer)
+		err = &smithy.DeserializationError{
+			Err:      fmt.Errorf("failed to decode response body, %w", err),
+			Snapshot: snapshot.Bytes(),
+		}
+		return err
+	}
+
+	output := &types.InvalidTargetMaps{}
+	err := awsAwsjson11_deserializeDocumentInvalidTargetMaps(&output, shape)
 
 	if err != nil {
 		var snapshot bytes.Buffer
@@ -20692,6 +20771,208 @@ func awsAwsjson11_deserializeDocumentActivationList(v *[]types.Activation, value
 	return nil
 }
 
+func awsAwsjson11_deserializeDocumentAlarm(v **types.Alarm, value interface{}) error {
+	if v == nil {
+		return fmt.Errorf("unexpected nil of type %T", v)
+	}
+	if value == nil {
+		return nil
+	}
+
+	shape, ok := value.(map[string]interface{})
+	if !ok {
+		return fmt.Errorf("unexpected JSON type %v", value)
+	}
+
+	var sv *types.Alarm
+	if *v == nil {
+		sv = &types.Alarm{}
+	} else {
+		sv = *v
+	}
+
+	for key, value := range shape {
+		switch key {
+		case "Name":
+			if value != nil {
+				jtv, ok := value.(string)
+				if !ok {
+					return fmt.Errorf("expected AlarmName to be of type string, got %T instead", value)
+				}
+				sv.Name = ptr.String(jtv)
+			}
+
+		default:
+			_, _ = key, value
+
+		}
+	}
+	*v = sv
+	return nil
+}
+
+func awsAwsjson11_deserializeDocumentAlarmConfiguration(v **types.AlarmConfiguration, value interface{}) error {
+	if v == nil {
+		return fmt.Errorf("unexpected nil of type %T", v)
+	}
+	if value == nil {
+		return nil
+	}
+
+	shape, ok := value.(map[string]interface{})
+	if !ok {
+		return fmt.Errorf("unexpected JSON type %v", value)
+	}
+
+	var sv *types.AlarmConfiguration
+	if *v == nil {
+		sv = &types.AlarmConfiguration{}
+	} else {
+		sv = *v
+	}
+
+	for key, value := range shape {
+		switch key {
+		case "Alarms":
+			if err := awsAwsjson11_deserializeDocumentAlarmList(&sv.Alarms, value); err != nil {
+				return err
+			}
+
+		case "IgnorePollAlarmFailure":
+			if value != nil {
+				jtv, ok := value.(bool)
+				if !ok {
+					return fmt.Errorf("expected Boolean to be of type *bool, got %T instead", value)
+				}
+				sv.IgnorePollAlarmFailure = jtv
+			}
+
+		default:
+			_, _ = key, value
+
+		}
+	}
+	*v = sv
+	return nil
+}
+
+func awsAwsjson11_deserializeDocumentAlarmList(v *[]types.Alarm, value interface{}) error {
+	if v == nil {
+		return fmt.Errorf("unexpected nil of type %T", v)
+	}
+	if value == nil {
+		return nil
+	}
+
+	shape, ok := value.([]interface{})
+	if !ok {
+		return fmt.Errorf("unexpected JSON type %v", value)
+	}
+
+	var cv []types.Alarm
+	if *v == nil {
+		cv = []types.Alarm{}
+	} else {
+		cv = *v
+	}
+
+	for _, value := range shape {
+		var col types.Alarm
+		destAddr := &col
+		if err := awsAwsjson11_deserializeDocumentAlarm(&destAddr, value); err != nil {
+			return err
+		}
+		col = *destAddr
+		cv = append(cv, col)
+
+	}
+	*v = cv
+	return nil
+}
+
+func awsAwsjson11_deserializeDocumentAlarmStateInformation(v **types.AlarmStateInformation, value interface{}) error {
+	if v == nil {
+		return fmt.Errorf("unexpected nil of type %T", v)
+	}
+	if value == nil {
+		return nil
+	}
+
+	shape, ok := value.(map[string]interface{})
+	if !ok {
+		return fmt.Errorf("unexpected JSON type %v", value)
+	}
+
+	var sv *types.AlarmStateInformation
+	if *v == nil {
+		sv = &types.AlarmStateInformation{}
+	} else {
+		sv = *v
+	}
+
+	for key, value := range shape {
+		switch key {
+		case "Name":
+			if value != nil {
+				jtv, ok := value.(string)
+				if !ok {
+					return fmt.Errorf("expected AlarmName to be of type string, got %T instead", value)
+				}
+				sv.Name = ptr.String(jtv)
+			}
+
+		case "State":
+			if value != nil {
+				jtv, ok := value.(string)
+				if !ok {
+					return fmt.Errorf("expected ExternalAlarmState to be of type string, got %T instead", value)
+				}
+				sv.State = types.ExternalAlarmState(jtv)
+			}
+
+		default:
+			_, _ = key, value
+
+		}
+	}
+	*v = sv
+	return nil
+}
+
+func awsAwsjson11_deserializeDocumentAlarmStateInformationList(v *[]types.AlarmStateInformation, value interface{}) error {
+	if v == nil {
+		return fmt.Errorf("unexpected nil of type %T", v)
+	}
+	if value == nil {
+		return nil
+	}
+
+	shape, ok := value.([]interface{})
+	if !ok {
+		return fmt.Errorf("unexpected JSON type %v", value)
+	}
+
+	var cv []types.AlarmStateInformation
+	if *v == nil {
+		cv = []types.AlarmStateInformation{}
+	} else {
+		cv = *v
+	}
+
+	for _, value := range shape {
+		var col types.AlarmStateInformation
+		destAddr := &col
+		if err := awsAwsjson11_deserializeDocumentAlarmStateInformation(&destAddr, value); err != nil {
+			return err
+		}
+		col = *destAddr
+		cv = append(cv, col)
+
+	}
+	*v = cv
+	return nil
+}
+
 func awsAwsjson11_deserializeDocumentAlreadyExistsException(v **types.AlreadyExistsException, value interface{}) error {
 	if v == nil {
 		return fmt.Errorf("unexpected nil of type %T", v)
@@ -20869,6 +21150,24 @@ func awsAwsjson11_deserializeDocumentAssociation(v **types.Association, value in
 				sv.ScheduleExpression = ptr.String(jtv)
 			}
 
+		case "ScheduleOffset":
+			if value != nil {
+				jtv, ok := value.(json.Number)
+				if !ok {
+					return fmt.Errorf("expected ScheduleOffset to be json.Number, got %T instead", value)
+				}
+				i64, err := jtv.Int64()
+				if err != nil {
+					return err
+				}
+				sv.ScheduleOffset = ptr.Int32(int32(i64))
+			}
+
+		case "TargetMaps":
+			if err := awsAwsjson11_deserializeDocumentTargetMaps(&sv.TargetMaps, value); err != nil {
+				return err
+			}
+
 		case "Targets":
 			if err := awsAwsjson11_deserializeDocumentTargets(&sv.Targets, value); err != nil {
 				return err
@@ -20936,6 +21235,11 @@ func awsAwsjson11_deserializeDocumentAssociationDescription(v **types.Associatio
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "ApplyOnlyAtCronInterval":
 			if value != nil {
 				jtv, ok := value.(bool)
@@ -21128,6 +21432,19 @@ func awsAwsjson11_deserializeDocumentAssociationDescription(v **types.Associatio
 				sv.ScheduleExpression = ptr.String(jtv)
 			}
 
+		case "ScheduleOffset":
+			if value != nil {
+				jtv, ok := value.(json.Number)
+				if !ok {
+					return fmt.Errorf("expected ScheduleOffset to be json.Number, got %T instead", value)
+				}
+				i64, err := jtv.Int64()
+				if err != nil {
+					return err
+				}
+				sv.ScheduleOffset = ptr.Int32(int32(i64))
+			}
+
 		case "Status":
 			if err := awsAwsjson11_deserializeDocumentAssociationStatus(&sv.Status, value); err != nil {
 				return err
@@ -21147,8 +21464,18 @@ func awsAwsjson11_deserializeDocumentAssociationDescription(v **types.Associatio
 				return err
 			}
 
+		case "TargetMaps":
+			if err := awsAwsjson11_deserializeDocumentTargetMaps(&sv.TargetMaps, value); err != nil {
+				return err
+			}
+
 		case "Targets":
 			if err := awsAwsjson11_deserializeDocumentTargets(&sv.Targets, value); err != nil {
+				return err
+			}
+
+		case "TriggeredAlarms":
+			if err := awsAwsjson11_deserializeDocumentAlarmStateInformationList(&sv.TriggeredAlarms, value); err != nil {
 				return err
 			}
 
@@ -21257,6 +21584,11 @@ func awsAwsjson11_deserializeDocumentAssociationExecution(v **types.AssociationE
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "AssociationId":
 			if value != nil {
 				jtv, ok := value.(string)
@@ -21341,6 +21673,11 @@ func awsAwsjson11_deserializeDocumentAssociationExecution(v **types.AssociationE
 					return fmt.Errorf("expected StatusName to be of type string, got %T instead", value)
 				}
 				sv.Status = ptr.String(jtv)
+			}
+
+		case "TriggeredAlarms":
+			if err := awsAwsjson11_deserializeDocumentAlarmStateInformationList(&sv.TriggeredAlarms, value); err != nil {
+				return err
 			}
 
 		default:
@@ -21951,6 +22288,19 @@ func awsAwsjson11_deserializeDocumentAssociationVersionInfo(v **types.Associatio
 				sv.ScheduleExpression = ptr.String(jtv)
 			}
 
+		case "ScheduleOffset":
+			if value != nil {
+				jtv, ok := value.(json.Number)
+				if !ok {
+					return fmt.Errorf("expected ScheduleOffset to be json.Number, got %T instead", value)
+				}
+				i64, err := jtv.Int64()
+				if err != nil {
+					return err
+				}
+				sv.ScheduleOffset = ptr.Int32(int32(i64))
+			}
+
 		case "SyncCompliance":
 			if value != nil {
 				jtv, ok := value.(string)
@@ -21962,6 +22312,11 @@ func awsAwsjson11_deserializeDocumentAssociationVersionInfo(v **types.Associatio
 
 		case "TargetLocations":
 			if err := awsAwsjson11_deserializeDocumentTargetLocations(&sv.TargetLocations, value); err != nil {
+				return err
+			}
+
+		case "TargetMaps":
+			if err := awsAwsjson11_deserializeDocumentTargetMaps(&sv.TargetMaps, value); err != nil {
 				return err
 			}
 
@@ -22383,6 +22738,11 @@ func awsAwsjson11_deserializeDocumentAutomationExecution(v **types.AutomationExe
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "AssociationId":
 			if value != nil {
 				jtv, ok := value.(string)
@@ -22647,6 +23007,11 @@ func awsAwsjson11_deserializeDocumentAutomationExecution(v **types.AutomationExe
 				return err
 			}
 
+		case "TriggeredAlarms":
+			if err := awsAwsjson11_deserializeDocumentAlarmStateInformationList(&sv.TriggeredAlarms, value); err != nil {
+				return err
+			}
+
 		default:
 			_, _ = key, value
 
@@ -22718,6 +23083,11 @@ func awsAwsjson11_deserializeDocumentAutomationExecutionMetadata(v **types.Autom
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "AssociationId":
 			if value != nil {
 				jtv, ok := value.(string)
@@ -22968,6 +23338,11 @@ func awsAwsjson11_deserializeDocumentAutomationExecutionMetadata(v **types.Autom
 
 		case "Targets":
 			if err := awsAwsjson11_deserializeDocumentTargets(&sv.Targets, value); err != nil {
+				return err
+			}
+
+		case "TriggeredAlarms":
+			if err := awsAwsjson11_deserializeDocumentAlarmStateInformationList(&sv.TriggeredAlarms, value); err != nil {
 				return err
 			}
 
@@ -23343,6 +23718,11 @@ func awsAwsjson11_deserializeDocumentCommand(v **types.Command, value interface{
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "CloudWatchOutputConfig":
 			if err := awsAwsjson11_deserializeDocumentCloudWatchOutputConfig(&sv.CloudWatchOutputConfig, value); err != nil {
 				return err
@@ -23571,6 +23951,11 @@ func awsAwsjson11_deserializeDocumentCommand(v **types.Command, value interface{
 					return err
 				}
 				sv.TimeoutSeconds = int32(i64)
+			}
+
+		case "TriggeredAlarms":
+			if err := awsAwsjson11_deserializeDocumentAlarmStateInformationList(&sv.TriggeredAlarms, value); err != nil {
+				return err
 			}
 
 		default:
@@ -24445,6 +24830,11 @@ func awsAwsjson11_deserializeDocumentCreateAssociationBatchRequestEntry(v **type
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "ApplyOnlyAtCronInterval":
 			if value != nil {
 				jtv, ok := value.(bool)
@@ -24550,6 +24940,19 @@ func awsAwsjson11_deserializeDocumentCreateAssociationBatchRequestEntry(v **type
 				sv.ScheduleExpression = ptr.String(jtv)
 			}
 
+		case "ScheduleOffset":
+			if value != nil {
+				jtv, ok := value.(json.Number)
+				if !ok {
+					return fmt.Errorf("expected ScheduleOffset to be json.Number, got %T instead", value)
+				}
+				i64, err := jtv.Int64()
+				if err != nil {
+					return err
+				}
+				sv.ScheduleOffset = ptr.Int32(int32(i64))
+			}
+
 		case "SyncCompliance":
 			if value != nil {
 				jtv, ok := value.(string)
@@ -24561,6 +24964,11 @@ func awsAwsjson11_deserializeDocumentCreateAssociationBatchRequestEntry(v **type
 
 		case "TargetLocations":
 			if err := awsAwsjson11_deserializeDocumentTargetLocations(&sv.TargetLocations, value); err != nil {
+				return err
+			}
+
+		case "TargetMaps":
+			if err := awsAwsjson11_deserializeDocumentTargetMaps(&sv.TargetMaps, value); err != nil {
 				return err
 			}
 
@@ -27026,7 +27434,7 @@ func awsAwsjson11_deserializeDocumentInstanceInformation(v **types.InstanceInfor
 				if !ok {
 					return fmt.Errorf("expected Boolean to be of type *bool, got %T instead", value)
 				}
-				sv.IsLatestVersion = jtv
+				sv.IsLatestVersion = ptr.Bool(jtv)
 			}
 
 		case "LastAssociationExecutionDate":
@@ -27249,7 +27657,7 @@ func awsAwsjson11_deserializeDocumentInstancePatchState(v **types.InstancePatchS
 				if err != nil {
 					return err
 				}
-				sv.CriticalNonCompliantCount = int32(i64)
+				sv.CriticalNonCompliantCount = ptr.Int32(int32(i64))
 			}
 
 		case "FailedCount":
@@ -27301,7 +27709,7 @@ func awsAwsjson11_deserializeDocumentInstancePatchState(v **types.InstancePatchS
 				if err != nil {
 					return err
 				}
-				sv.InstalledPendingRebootCount = int32(i64)
+				sv.InstalledPendingRebootCount = ptr.Int32(int32(i64))
 			}
 
 		case "InstalledRejectedCount":
@@ -27314,7 +27722,7 @@ func awsAwsjson11_deserializeDocumentInstancePatchState(v **types.InstancePatchS
 				if err != nil {
 					return err
 				}
-				sv.InstalledRejectedCount = int32(i64)
+				sv.InstalledRejectedCount = ptr.Int32(int32(i64))
 			}
 
 		case "InstallOverrideList":
@@ -27428,7 +27836,7 @@ func awsAwsjson11_deserializeDocumentInstancePatchState(v **types.InstancePatchS
 				if err != nil {
 					return err
 				}
-				sv.OtherNonCompliantCount = int32(i64)
+				sv.OtherNonCompliantCount = ptr.Int32(int32(i64))
 			}
 
 		case "OwnerInformation":
@@ -27468,7 +27876,7 @@ func awsAwsjson11_deserializeDocumentInstancePatchState(v **types.InstancePatchS
 				if err != nil {
 					return err
 				}
-				sv.SecurityNonCompliantCount = int32(i64)
+				sv.SecurityNonCompliantCount = ptr.Int32(int32(i64))
 			}
 
 		case "SnapshotId":
@@ -27490,7 +27898,7 @@ func awsAwsjson11_deserializeDocumentInstancePatchState(v **types.InstancePatchS
 				if err != nil {
 					return err
 				}
-				sv.UnreportedNotApplicableCount = int32(i64)
+				sv.UnreportedNotApplicableCount = ptr.Int32(int32(i64))
 			}
 
 		default:
@@ -29316,6 +29724,46 @@ func awsAwsjson11_deserializeDocumentInvalidSchedule(v **types.InvalidSchedule, 
 	return nil
 }
 
+func awsAwsjson11_deserializeDocumentInvalidTag(v **types.InvalidTag, value interface{}) error {
+	if v == nil {
+		return fmt.Errorf("unexpected nil of type %T", v)
+	}
+	if value == nil {
+		return nil
+	}
+
+	shape, ok := value.(map[string]interface{})
+	if !ok {
+		return fmt.Errorf("unexpected JSON type %v", value)
+	}
+
+	var sv *types.InvalidTag
+	if *v == nil {
+		sv = &types.InvalidTag{}
+	} else {
+		sv = *v
+	}
+
+	for key, value := range shape {
+		switch key {
+		case "Message":
+			if value != nil {
+				jtv, ok := value.(string)
+				if !ok {
+					return fmt.Errorf("expected String to be of type string, got %T instead", value)
+				}
+				sv.Message = ptr.String(jtv)
+			}
+
+		default:
+			_, _ = key, value
+
+		}
+	}
+	*v = sv
+	return nil
+}
+
 func awsAwsjson11_deserializeDocumentInvalidTarget(v **types.InvalidTarget, value interface{}) error {
 	if v == nil {
 		return fmt.Errorf("unexpected nil of type %T", v)
@@ -29332,6 +29780,46 @@ func awsAwsjson11_deserializeDocumentInvalidTarget(v **types.InvalidTarget, valu
 	var sv *types.InvalidTarget
 	if *v == nil {
 		sv = &types.InvalidTarget{}
+	} else {
+		sv = *v
+	}
+
+	for key, value := range shape {
+		switch key {
+		case "Message":
+			if value != nil {
+				jtv, ok := value.(string)
+				if !ok {
+					return fmt.Errorf("expected String to be of type string, got %T instead", value)
+				}
+				sv.Message = ptr.String(jtv)
+			}
+
+		default:
+			_, _ = key, value
+
+		}
+	}
+	*v = sv
+	return nil
+}
+
+func awsAwsjson11_deserializeDocumentInvalidTargetMaps(v **types.InvalidTargetMaps, value interface{}) error {
+	if v == nil {
+		return fmt.Errorf("unexpected nil of type %T", v)
+	}
+	if value == nil {
+		return nil
+	}
+
+	shape, ok := value.(map[string]interface{})
+	if !ok {
+		return fmt.Errorf("unexpected JSON type %v", value)
+	}
+
+	var sv *types.InvalidTargetMaps
+	if *v == nil {
+		sv = &types.InvalidTargetMaps{}
 	} else {
 		sv = *v
 	}
@@ -30557,6 +31045,11 @@ func awsAwsjson11_deserializeDocumentMaintenanceWindowExecutionTaskIdentity(v **
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "EndTime":
 			if value != nil {
 				switch jtv := value.(type) {
@@ -30632,6 +31125,11 @@ func awsAwsjson11_deserializeDocumentMaintenanceWindowExecutionTaskIdentity(v **
 					return fmt.Errorf("expected MaintenanceWindowTaskType to be of type string, got %T instead", value)
 				}
 				sv.TaskType = types.MaintenanceWindowTaskType(jtv)
+			}
+
+		case "TriggeredAlarms":
+			if err := awsAwsjson11_deserializeDocumentAlarmStateInformationList(&sv.TriggeredAlarms, value); err != nil {
+				return err
 			}
 
 		case "WindowExecutionId":
@@ -31021,7 +31519,7 @@ func awsAwsjson11_deserializeDocumentMaintenanceWindowIdentity(v **types.Mainten
 				if err != nil {
 					return err
 				}
-				sv.ScheduleOffset = int32(i64)
+				sv.ScheduleOffset = ptr.Int32(int32(i64))
 			}
 
 		case "ScheduleTimezone":
@@ -31315,7 +31813,7 @@ func awsAwsjson11_deserializeDocumentMaintenanceWindowRunCommandParameters(v **t
 				if err != nil {
 					return err
 				}
-				sv.TimeoutSeconds = int32(i64)
+				sv.TimeoutSeconds = ptr.Int32(int32(i64))
 			}
 
 		default:
@@ -31556,6 +32054,11 @@ func awsAwsjson11_deserializeDocumentMaintenanceWindowTask(v **types.Maintenance
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "CutoffBehavior":
 			if value != nil {
 				jtv, ok := value.(string)
@@ -36220,7 +36723,7 @@ func awsAwsjson11_deserializeDocumentPatchRule(v **types.PatchRule, value interf
 				if err != nil {
 					return err
 				}
-				sv.ApproveAfterDays = int32(i64)
+				sv.ApproveAfterDays = ptr.Int32(int32(i64))
 			}
 
 		case "ApproveUntilDate":
@@ -36247,7 +36750,7 @@ func awsAwsjson11_deserializeDocumentPatchRule(v **types.PatchRule, value interf
 				if !ok {
 					return fmt.Errorf("expected Boolean to be of type *bool, got %T instead", value)
 				}
-				sv.EnableNonSecurity = jtv
+				sv.EnableNonSecurity = ptr.Bool(jtv)
 			}
 
 		case "PatchFilterGroup":
@@ -37968,6 +38471,11 @@ func awsAwsjson11_deserializeDocumentRunbook(v **types.Runbook, value interface{
 				return err
 			}
 
+		case "TargetMaps":
+			if err := awsAwsjson11_deserializeDocumentTargetMaps(&sv.TargetMaps, value); err != nil {
+				return err
+			}
+
 		case "TargetParameterName":
 			if value != nil {
 				jtv, ok := value.(string)
@@ -38798,7 +39306,7 @@ func awsAwsjson11_deserializeDocumentStepExecution(v **types.StepExecution, valu
 				if !ok {
 					return fmt.Errorf("expected Boolean to be of type *bool, got %T instead", value)
 				}
-				sv.IsCritical = jtv
+				sv.IsCritical = ptr.Bool(jtv)
 			}
 
 		case "IsEnd":
@@ -38807,7 +39315,7 @@ func awsAwsjson11_deserializeDocumentStepExecution(v **types.StepExecution, valu
 				if !ok {
 					return fmt.Errorf("expected Boolean to be of type *bool, got %T instead", value)
 				}
-				sv.IsEnd = jtv
+				sv.IsEnd = ptr.Bool(jtv)
 			}
 
 		case "MaxAttempts":
@@ -38820,7 +39328,7 @@ func awsAwsjson11_deserializeDocumentStepExecution(v **types.StepExecution, valu
 				if err != nil {
 					return err
 				}
-				sv.MaxAttempts = int32(i64)
+				sv.MaxAttempts = ptr.Int32(int32(i64))
 			}
 
 		case "NextStep":
@@ -38916,7 +39424,7 @@ func awsAwsjson11_deserializeDocumentStepExecution(v **types.StepExecution, valu
 				if err != nil {
 					return err
 				}
-				sv.TimeoutSeconds = i64
+				sv.TimeoutSeconds = ptr.Int64(i64)
 			}
 
 		case "ValidNextSteps":
@@ -42332,7 +42840,7 @@ func awsAwsjson11_deserializeOpDocumentDescribePatchGroupStateOutput(v **Describ
 				if err != nil {
 					return err
 				}
-				sv.InstancesWithCriticalNonCompliantPatches = int32(i64)
+				sv.InstancesWithCriticalNonCompliantPatches = ptr.Int32(int32(i64))
 			}
 
 		case "InstancesWithFailedPatches":
@@ -42384,7 +42892,7 @@ func awsAwsjson11_deserializeOpDocumentDescribePatchGroupStateOutput(v **Describ
 				if err != nil {
 					return err
 				}
-				sv.InstancesWithInstalledPendingRebootPatches = int32(i64)
+				sv.InstancesWithInstalledPendingRebootPatches = ptr.Int32(int32(i64))
 			}
 
 		case "InstancesWithInstalledRejectedPatches":
@@ -42397,7 +42905,7 @@ func awsAwsjson11_deserializeOpDocumentDescribePatchGroupStateOutput(v **Describ
 				if err != nil {
 					return err
 				}
-				sv.InstancesWithInstalledRejectedPatches = int32(i64)
+				sv.InstancesWithInstalledRejectedPatches = ptr.Int32(int32(i64))
 			}
 
 		case "InstancesWithMissingPatches":
@@ -42436,7 +42944,7 @@ func awsAwsjson11_deserializeOpDocumentDescribePatchGroupStateOutput(v **Describ
 				if err != nil {
 					return err
 				}
-				sv.InstancesWithOtherNonCompliantPatches = int32(i64)
+				sv.InstancesWithOtherNonCompliantPatches = ptr.Int32(int32(i64))
 			}
 
 		case "InstancesWithSecurityNonCompliantPatches":
@@ -42449,7 +42957,7 @@ func awsAwsjson11_deserializeOpDocumentDescribePatchGroupStateOutput(v **Describ
 				if err != nil {
 					return err
 				}
-				sv.InstancesWithSecurityNonCompliantPatches = int32(i64)
+				sv.InstancesWithSecurityNonCompliantPatches = ptr.Int32(int32(i64))
 			}
 
 		case "InstancesWithUnreportedNotApplicablePatches":
@@ -42462,7 +42970,7 @@ func awsAwsjson11_deserializeOpDocumentDescribePatchGroupStateOutput(v **Describ
 				if err != nil {
 					return err
 				}
-				sv.InstancesWithUnreportedNotApplicablePatches = int32(i64)
+				sv.InstancesWithUnreportedNotApplicablePatches = ptr.Int32(int32(i64))
 			}
 
 		default:
@@ -43545,6 +44053,11 @@ func awsAwsjson11_deserializeOpDocumentGetMaintenanceWindowExecutionTaskOutput(v
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "EndTime":
 			if value != nil {
 				switch jtv := value.(type) {
@@ -43655,6 +44168,11 @@ func awsAwsjson11_deserializeOpDocumentGetMaintenanceWindowExecutionTaskOutput(v
 
 		case "TaskParameters":
 			if err := awsAwsjson11_deserializeDocumentMaintenanceWindowTaskParametersList(&sv.TaskParameters, value); err != nil {
+				return err
+			}
+
+		case "TriggeredAlarms":
+			if err := awsAwsjson11_deserializeDocumentAlarmStateInformationList(&sv.TriggeredAlarms, value); err != nil {
 				return err
 			}
 
@@ -43838,7 +44356,7 @@ func awsAwsjson11_deserializeOpDocumentGetMaintenanceWindowOutput(v **GetMainten
 				if err != nil {
 					return err
 				}
-				sv.ScheduleOffset = int32(i64)
+				sv.ScheduleOffset = ptr.Int32(int32(i64))
 			}
 
 		case "ScheduleTimezone":
@@ -43899,6 +44417,11 @@ func awsAwsjson11_deserializeOpDocumentGetMaintenanceWindowTaskOutput(v **GetMai
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "CutoffBehavior":
 			if value != nil {
 				jtv, ok := value.(string)
@@ -44438,7 +44961,7 @@ func awsAwsjson11_deserializeOpDocumentGetPatchBaselineOutput(v **GetPatchBaseli
 				if !ok {
 					return fmt.Errorf("expected Boolean to be of type *bool, got %T instead", value)
 				}
-				sv.ApprovedPatchesEnableNonSecurity = jtv
+				sv.ApprovedPatchesEnableNonSecurity = ptr.Bool(jtv)
 			}
 
 		case "BaselineId":
@@ -46490,7 +47013,7 @@ func awsAwsjson11_deserializeOpDocumentUpdateMaintenanceWindowOutput(v **UpdateM
 				if err != nil {
 					return err
 				}
-				sv.ScheduleOffset = int32(i64)
+				sv.ScheduleOffset = ptr.Int32(int32(i64))
 			}
 
 		case "ScheduleTimezone":
@@ -46632,6 +47155,11 @@ func awsAwsjson11_deserializeOpDocumentUpdateMaintenanceWindowTaskOutput(v **Upd
 
 	for key, value := range shape {
 		switch key {
+		case "AlarmConfiguration":
+			if err := awsAwsjson11_deserializeDocumentAlarmConfiguration(&sv.AlarmConfiguration, value); err != nil {
+				return err
+			}
+
 		case "CutoffBehavior":
 			if value != nil {
 				jtv, ok := value.(string)
@@ -46904,7 +47432,7 @@ func awsAwsjson11_deserializeOpDocumentUpdatePatchBaselineOutput(v **UpdatePatch
 				if !ok {
 					return fmt.Errorf("expected Boolean to be of type *bool, got %T instead", value)
 				}
-				sv.ApprovedPatchesEnableNonSecurity = jtv
+				sv.ApprovedPatchesEnableNonSecurity = ptr.Bool(jtv)
 			}
 
 		case "BaselineId":
