@@ -54,9 +54,8 @@ func (argv *ArgT) Validate(ctx *cli.Context) (err error) {
 }
 
 func main() {
-	os.Exit(cli.Run(new(ArgT), func(ctx *cli.Context) (err error) {
-		err = Run(ctx)
-		return
+	os.Exit(cli.Run(new(ArgT), func(ctx *cli.Context) error {
+		return Run(ctx)
 	}))
 }
 
@@ -120,7 +119,7 @@ func Run(ctx *cli.Context) (err error) {
 	ssmclient := ssm.NewFromConfig(cfg)
 	resp, err := ssmclient.GetParameter(context.TODO(), &ssm.GetParameterInput{
 		Name:           aws.String(prm),
-		WithDecryption: true,
+		WithDecryption: aws.Bool(true),
 	})
 	if err != nil {
 		log.Fatalf("ERROR: ssm.GetParameter:: %s\n%s", prm, err)

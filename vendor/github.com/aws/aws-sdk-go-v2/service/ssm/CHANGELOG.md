@@ -1,3 +1,118 @@
+# v1.30.0 (2022-09-26)
+
+* **Feature**: This release includes support for applying a CloudWatch alarm to Systems Manager capabilities like Automation, Run Command, State Manager, and Maintenance Windows.
+
+# v1.29.0 (2022-09-23)
+
+* **Feature**: This release adds new SSM document types ConformancePackTemplate and CloudFormation
+
+# v1.28.1 (2022-09-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.28.0 (2022-09-14)
+
+* **Feature**: Fixed a bug in the API client generation which caused some operation parameters to be incorrectly generated as value types instead of pointer types. The service API always required these affected parameters to be nilable. This fixes the SDK client to match the expectations of the the service API.
+* **Feature**: This release adds support for Systems Manager State Manager Association tagging.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.13 (2022-09-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.12 (2022-08-31)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.11 (2022-08-30)
+
+* No change notes available for this release.
+
+# v1.27.10 (2022-08-29)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.9 (2022-08-11)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.8 (2022-08-09)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.7 (2022-08-08)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.6 (2022-08-01)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.5 (2022-07-27)
+
+* **Documentation**: Adding doc updates for OpsCenter support in Service Setting actions.
+
+# v1.27.4 (2022-07-05)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.3 (2022-06-29)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.2 (2022-06-07)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.1 (2022-05-17)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.27.0 (2022-05-04)
+
+* **Feature**: This release adds the TargetMaps parameter in SSM State Manager API.
+
+# v1.26.0 (2022-04-29)
+
+* **Feature**: Update the StartChangeRequestExecution, adding TargetMaps to the Runbook parameter
+
+# v1.25.1 (2022-04-25)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.25.0 (2022-04-19)
+
+* **Feature**: Added offset support for specifying the number of days to wait after the date and time specified by a CRON expression when creating SSM association.
+
+# v1.24.1 (2022-03-30)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.24.0 (2022-03-25)
+
+* **Feature**: This Patch Manager release supports creating, updating, and deleting Patch Baselines for Rocky Linux OS.
+
+# v1.23.1 (2022-03-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.23.0 (2022-03-23)
+
+* **Feature**: Update AddTagsToResource, ListTagsForResource, and RemoveTagsFromResource APIs to reflect the support for tagging Automation resources. Includes other minor documentation updates.
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.22.0 (2022-03-08)
+
+* **Feature**: Updated `github.com/aws/smithy-go` to latest version
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.21.0 (2022-02-24)
+
+* **Feature**: API client updated
+* **Feature**: Adds RetryMaxAttempts and RetryMod to API client Options. This allows the API clients' default Retryer to be configured from the shared configuration files or environment variables. Adding a new Retry mode of `Adaptive`. `Adaptive` retry mode is an experimental mode, adding client rate limiting when throttles reponses are received from an API. See [retry.AdaptiveMode](https://pkg.go.dev/github.com/aws/aws-sdk-go-v2/aws/retry#AdaptiveMode) for more details, and configuration options.
+* **Feature**: Updated `github.com/aws/smithy-go` to latest version
+* **Dependency Update**: Updated to the latest SDK module versions
+
 # v1.20.0 (2022-01-14)
 
 * **Feature**: Updated API models

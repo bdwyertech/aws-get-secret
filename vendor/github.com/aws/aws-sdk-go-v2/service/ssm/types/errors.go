@@ -1531,6 +1531,25 @@ func (e *InvalidSchedule) ErrorMessage() string {
 func (e *InvalidSchedule) ErrorCode() string             { return "InvalidSchedule" }
 func (e *InvalidSchedule) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
+// The tag key or value isn't valid.
+type InvalidTag struct {
+	Message *string
+
+	noSmithyDocumentSerde
+}
+
+func (e *InvalidTag) Error() string {
+	return fmt.Sprintf("%s: %s", e.ErrorCode(), e.ErrorMessage())
+}
+func (e *InvalidTag) ErrorMessage() string {
+	if e.Message == nil {
+		return ""
+	}
+	return *e.Message
+}
+func (e *InvalidTag) ErrorCode() string             { return "InvalidTag" }
+func (e *InvalidTag) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
+
 // The target isn't valid or doesn't exist. It might not be configured for Systems
 // Manager or you might not have permission to perform the operation.
 type InvalidTarget struct {
@@ -1550,6 +1569,25 @@ func (e *InvalidTarget) ErrorMessage() string {
 }
 func (e *InvalidTarget) ErrorCode() string             { return "InvalidTarget" }
 func (e *InvalidTarget) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
+
+// TargetMap parameter isn't valid.
+type InvalidTargetMaps struct {
+	Message *string
+
+	noSmithyDocumentSerde
+}
+
+func (e *InvalidTargetMaps) Error() string {
+	return fmt.Sprintf("%s: %s", e.ErrorCode(), e.ErrorMessage())
+}
+func (e *InvalidTargetMaps) ErrorMessage() string {
+	if e.Message == nil {
+		return ""
+	}
+	return *e.Message
+}
+func (e *InvalidTargetMaps) ErrorCode() string             { return "InvalidTargetMaps" }
+func (e *InvalidTargetMaps) ErrorFault() smithy.ErrorFault { return smithy.FaultClient }
 
 // The parameter type name isn't valid.
 type InvalidTypeNameException struct {
