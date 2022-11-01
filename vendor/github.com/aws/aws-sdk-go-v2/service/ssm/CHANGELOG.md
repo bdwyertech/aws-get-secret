@@ -1,3 +1,19 @@
+# v1.31.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.31.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.31.1 (2022-10-20)
+
+* No change notes available for this release.
+
+# v1.31.0 (2022-10-13)
+
+* **Feature**: Support of AmazonLinux2022 by Patch Manager
+
 # v1.30.0 (2022-09-26)
 
 * **Feature**: This release includes support for applying a CloudWatch alarm to Systems Manager capabilities like Automation, Run Command, State Manager, and Maintenance Windows.
