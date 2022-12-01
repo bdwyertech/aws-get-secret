@@ -1132,6 +1132,7 @@ const (
 	OperatingSystemWindows               OperatingSystem = "WINDOWS"
 	OperatingSystemAmazonLinux           OperatingSystem = "AMAZON_LINUX"
 	OperatingSystemAmazonLinux2          OperatingSystem = "AMAZON_LINUX_2"
+	OperatingSystemAmazonLinux2022       OperatingSystem = "AMAZON_LINUX_2022"
 	OperatingSystemUbuntu                OperatingSystem = "UBUNTU"
 	OperatingSystemRedhatEnterpriseLinux OperatingSystem = "REDHAT_ENTERPRISE_LINUX"
 	OperatingSystemSuse                  OperatingSystem = "SUSE"
@@ -1151,6 +1152,7 @@ func (OperatingSystem) Values() []OperatingSystem {
 		"WINDOWS",
 		"AMAZON_LINUX",
 		"AMAZON_LINUX_2",
+		"AMAZON_LINUX_2022",
 		"UBUNTU",
 		"REDHAT_ENTERPRISE_LINUX",
 		"SUSE",
@@ -1270,6 +1272,7 @@ const (
 	OpsItemFilterKeyChangeRequestTemplate             OpsItemFilterKey = "ChangeRequestByTemplate"
 	OpsItemFilterKeyChangeRequestTargetsResourceGroup OpsItemFilterKey = "ChangeRequestByTargetsResourceGroup"
 	OpsItemFilterKeyInsightType                       OpsItemFilterKey = "InsightByType"
+	OpsItemFilterKeyAccountId                         OpsItemFilterKey = "AccountId"
 )
 
 // Values returns all known values for OpsItemFilterKey. Note that this can be
@@ -1304,6 +1307,7 @@ func (OpsItemFilterKey) Values() []OpsItemFilterKey {
 		"ChangeRequestByTemplate",
 		"ChangeRequestByTargetsResourceGroup",
 		"InsightByType",
+		"AccountId",
 	}
 }
 

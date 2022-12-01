@@ -2163,6 +2163,31 @@ type FailureDetails struct {
 	noSmithyDocumentSerde
 }
 
+// A resource policy helps you to define the IAM entity (for example, an Amazon Web
+// Services account) that can manage your Systems Manager resources. Currently,
+// OpsItemGroup is the only resource that supports Systems Manager resource
+// policies. The resource policy for OpsItemGroup enables Amazon Web Services
+// accounts to view and interact with OpsCenter operational work items (OpsItems).
+type GetResourcePoliciesResponseEntry struct {
+
+	// A resource policy helps you to define the IAM entity (for example, an Amazon Web
+	// Services account) that can manage your Systems Manager resources. Currently,
+	// OpsItemGroup is the only resource that supports Systems Manager resource
+	// policies. The resource policy for OpsItemGroup enables Amazon Web Services
+	// accounts to view and interact with OpsCenter operational work items (OpsItems).
+	Policy *string
+
+	// ID of the current policy version. The hash helps to prevent a situation where
+	// multiple users attempt to overwrite a policy. You must provide this hash when
+	// updating or deleting a policy.
+	PolicyHash *string
+
+	// A policy ID.
+	PolicyId *string
+
+	noSmithyDocumentSerde
+}
+
 // Status information about the aggregated associations.
 type InstanceAggregatedAssociationOverview struct {
 
@@ -2380,12 +2405,28 @@ type InstanceInformationFilter struct {
 // The filters to describe or get information about your managed nodes.
 type InstanceInformationStringFilter struct {
 
-	// The filter key name to describe your managed nodes. For example: "InstanceIds" |
-	// "AgentVersion" | "PingStatus" | "PlatformTypes" | "ActivationIds" | "IamRole" |
-	// "ResourceType" | "AssociationStatus" | "tag-key" | "tag:{keyname}Tag Key isn't a
-	// valid filter. You must specify either tag-key or tag:{keyname} and a string.
-	// Here are some valid examples: tag-key, tag:123, tag:al!, tag:Windows. Here are
-	// some invalid examples: tag-keys, Tag Key, tag:, tagKey, abc:keyname.
+	// The filter key name to describe your managed nodes. Valid filter key values:
+	// ActivationIds | AgentVersion | AssociationStatus | IamRole | InstanceIds |
+	// PingStatus | PlatformTypes | ResourceType | SourceIds | SourceTypes | "tag-key"
+	// | "tag:{keyname}
+	//
+	// * Valid values for the AssociationStatus filter key: Success |
+	// Pending | Failed
+	//
+	// * Valid values for the PingStatus filter key: Online |
+	// ConnectionLost | Inactive (deprecated)
+	//
+	// * Valid values for the PlatformType
+	// filter key: Windows | Linux | MacOS
+	//
+	// * Valid values for the ResourceType filter
+	// key: EC2Instance | ManagedInstance
+	//
+	// * Valid values for the SourceType filter
+	// key: AWS::EC2::Instance | AWS::SSM::ManagedInstance | AWS::IoT::Thing
+	//
+	// * Valid
+	// tag examples: Key=tag-key,Values=Purpose | Key=tag:Purpose,Values=Test.
 	//
 	// This member is required.
 	Key *string
@@ -2440,10 +2481,10 @@ type InstancePatchState struct {
 	// This member is required.
 	PatchGroup *string
 
-	// The number of managed nodes where patches that are specified as Critical for
-	// compliance reporting in the patch baseline aren't installed. These patches might
-	// be missing, have failed installation, were rejected, or were installed but
-	// awaiting a required managed node reboot. The status of these managed nodes is
+	// The number of patches per node that are specified as Critical for compliance
+	// reporting in the patch baseline aren't installed. These patches might be
+	// missing, have failed installation, were rejected, or were installed but awaiting
+	// a required managed node reboot. The status of these managed nodes is
 	// NON_COMPLIANT.
 	CriticalNonCompliantCount *int32
 
@@ -2494,9 +2535,9 @@ type InstancePatchState struct {
 	// this limit are reported in UnreportedNotApplicableCount.
 	NotApplicableCount int32
 
-	// The number of managed nodes with patches installed that are specified as other
-	// than Critical or Security but aren't compliant with the patch baseline. The
-	// status of these managed nodes is NON_COMPLIANT.
+	// The number of patches per node that are specified as other than Critical or
+	// Security but aren't compliant with the patch baseline. The status of these
+	// managed nodes is NON_COMPLIANT.
 	OtherNonCompliantCount *int32
 
 	// Placeholder information. This field will always be empty in the current release
@@ -2517,8 +2558,8 @@ type InstancePatchState struct {
 	// not be in effect until a reboot is performed.
 	RebootOption RebootOption
 
-	// The number of managed nodes where patches that are specified as Security in a
-	// patch advisory aren't installed. These patches might be missing, have failed
+	// The number of patches per node that are specified as Security in a patch
+	// advisory aren't installed. These patches might be missing, have failed
 	// installation, were rejected, or were installed but awaiting a required managed
 	// node reboot. The status of these managed nodes is NON_COMPLIANT.
 	SecurityNonCompliantCount *int32
@@ -2844,7 +2885,7 @@ type InventoryResultItem struct {
 // window task types, see MaintenanceWindowTaskInvocationParameters.
 type LoggingInfo struct {
 
-	// The name of an S3 bucket where execution logs are stored .
+	// The name of an S3 bucket where execution logs are stored.
 	//
 	// This member is required.
 	S3BucketName *string
@@ -3537,11 +3578,24 @@ type OpsItem struct {
 	// in the Amazon Web Services Systems Manager User Guide.
 	OperationalData map[string]OpsItemDataValue
 
+	// The OpsItem Amazon Resource Name (ARN).
+	OpsItemArn *string
+
 	// The ID of the OpsItem.
 	OpsItemId *string
 
-	// The type of OpsItem. Currently, the only valid values are /aws/changerequest and
-	// /aws/issue.
+	// The type of OpsItem. Systems Manager supports the following types of
+	// OpsItems:
+	//
+	// * /aws/issue This type of OpsItem is used for default OpsItems
+	// created by OpsCenter.
+	//
+	// * /aws/changerequest This type of OpsItem is used by
+	// Change Manager for reviewing and approving or rejecting change requests.
+	//
+	// *
+	// /aws/insights This type of OpsItem is used by OpsCenter for aggregating and
+	// reporting on duplicate OpsItems.
 	OpsItemType *string
 
 	// The time specified in a change request for a runbook workflow to end. Currently
@@ -3776,8 +3830,18 @@ type OpsItemSummary struct {
 	// The ID of the OpsItem.
 	OpsItemId *string
 
-	// The type of OpsItem. Currently, the only valid values are /aws/changerequest and
-	// /aws/issue.
+	// The type of OpsItem. Systems Manager supports the following types of
+	// OpsItems:
+	//
+	// * /aws/issue This type of OpsItem is used for default OpsItems
+	// created by OpsCenter.
+	//
+	// * /aws/changerequest This type of OpsItem is used by
+	// Change Manager for reviewing and approving or rejecting change requests.
+	//
+	// *
+	// /aws/insights This type of OpsItem is used by OpsCenter for aggregating and
+	// reporting on duplicate OpsItems.
 	OpsItemType *string
 
 	// The time specified in a change request for a runbook workflow to end. Currently
@@ -5070,6 +5134,9 @@ type StepExecution struct {
 	// The timeout seconds of the step.
 	TimeoutSeconds *int64
 
+	// The CloudWatch alarms that were invoked by the automation.
+	TriggeredAlarms []AlarmStateInformation
+
 	// Strategies used when step fails, we support Continue and Abort. Abort will fail
 	// the automation when the step fails. Continue will ignore the failure of current
 	// step and allow automation to run the next step. With conditional branching, we
@@ -5207,6 +5274,10 @@ type TargetLocation struct {
 
 	// The Amazon Web Services Regions targeted by the current Automation execution.
 	Regions []string
+
+	// The details for the CloudWatch alarm you want to apply to an automation or
+	// command.
+	TargetLocationAlarmConfiguration *AlarmConfiguration
 
 	// The maximum number of Amazon Web Services Regions and Amazon Web Services
 	// accounts allowed to run the Automation concurrently.

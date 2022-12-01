@@ -450,6 +450,26 @@ func (m *validateOpDeleteResourceDataSync) HandleInitialize(ctx context.Context,
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpDeleteResourcePolicy struct {
+}
+
+func (*validateOpDeleteResourcePolicy) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpDeleteResourcePolicy) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*DeleteResourcePolicyInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpDeleteResourcePolicyInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpDeregisterManagedInstance struct {
 }
 
@@ -1450,6 +1470,26 @@ func (m *validateOpGetPatchBaseline) HandleInitialize(ctx context.Context, in mi
 	return next.HandleInitialize(ctx, in)
 }
 
+type validateOpGetResourcePolicies struct {
+}
+
+func (*validateOpGetResourcePolicies) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpGetResourcePolicies) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*GetResourcePoliciesInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpGetResourcePoliciesInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
 type validateOpGetServiceSetting struct {
 }
 
@@ -1805,6 +1845,26 @@ func (m *validateOpPutParameter) HandleInitialize(ctx context.Context, in middle
 		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
 	}
 	if err := validateOpPutParameterInput(input); err != nil {
+		return out, metadata, err
+	}
+	return next.HandleInitialize(ctx, in)
+}
+
+type validateOpPutResourcePolicy struct {
+}
+
+func (*validateOpPutResourcePolicy) ID() string {
+	return "OperationInputValidation"
+}
+
+func (m *validateOpPutResourcePolicy) HandleInitialize(ctx context.Context, in middleware.InitializeInput, next middleware.InitializeHandler) (
+	out middleware.InitializeOutput, metadata middleware.Metadata, err error,
+) {
+	input, ok := in.Parameters.(*PutResourcePolicyInput)
+	if !ok {
+		return out, metadata, fmt.Errorf("unknown input parameters type %T", in.Parameters)
+	}
+	if err := validateOpPutResourcePolicyInput(input); err != nil {
 		return out, metadata, err
 	}
 	return next.HandleInitialize(ctx, in)
@@ -2498,6 +2558,10 @@ func addOpDeleteResourceDataSyncValidationMiddleware(stack *middleware.Stack) er
 	return stack.Initialize.Add(&validateOpDeleteResourceDataSync{}, middleware.After)
 }
 
+func addOpDeleteResourcePolicyValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpDeleteResourcePolicy{}, middleware.After)
+}
+
 func addOpDeregisterManagedInstanceValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpDeregisterManagedInstance{}, middleware.After)
 }
@@ -2698,6 +2762,10 @@ func addOpGetPatchBaselineValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpGetPatchBaseline{}, middleware.After)
 }
 
+func addOpGetResourcePoliciesValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpGetResourcePolicies{}, middleware.After)
+}
+
 func addOpGetServiceSettingValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpGetServiceSetting{}, middleware.After)
 }
@@ -2768,6 +2836,10 @@ func addOpPutInventoryValidationMiddleware(stack *middleware.Stack) error {
 
 func addOpPutParameterValidationMiddleware(stack *middleware.Stack) error {
 	return stack.Initialize.Add(&validateOpPutParameter{}, middleware.After)
+}
+
+func addOpPutResourcePolicyValidationMiddleware(stack *middleware.Stack) error {
+	return stack.Initialize.Add(&validateOpPutResourcePolicy{}, middleware.After)
 }
 
 func addOpRegisterDefaultPatchBaselineValidationMiddleware(stack *middleware.Stack) error {
@@ -3241,6 +3313,11 @@ func validateCreateAssociationBatchRequestEntry(v *types.CreateAssociationBatchR
 	invalidParams := smithy.InvalidParamsError{Context: "CreateAssociationBatchRequestEntry"}
 	if v.Name == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("Name"))
+	}
+	if v.TargetLocations != nil {
+		if err := validateTargetLocations(v.TargetLocations); err != nil {
+			invalidParams.AddNested("TargetLocations", err.(smithy.InvalidParamsError))
+		}
 	}
 	if v.AlarmConfiguration != nil {
 		if err := validateAlarmConfiguration(v.AlarmConfiguration); err != nil {
@@ -4248,6 +4325,11 @@ func validateRunbook(v *types.Runbook) error {
 	if v.DocumentName == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("DocumentName"))
 	}
+	if v.TargetLocations != nil {
+		if err := validateTargetLocations(v.TargetLocations); err != nil {
+			invalidParams.AddNested("TargetLocations", err.(smithy.InvalidParamsError))
+		}
+	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	} else {
@@ -4367,6 +4449,40 @@ func validateTagList(v []types.Tag) error {
 	invalidParams := smithy.InvalidParamsError{Context: "TagList"}
 	for i := range v {
 		if err := validateTag(&v[i]); err != nil {
+			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateTargetLocation(v *types.TargetLocation) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "TargetLocation"}
+	if v.TargetLocationAlarmConfiguration != nil {
+		if err := validateAlarmConfiguration(v.TargetLocationAlarmConfiguration); err != nil {
+			invalidParams.AddNested("TargetLocationAlarmConfiguration", err.(smithy.InvalidParamsError))
+		}
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateTargetLocations(v []types.TargetLocation) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "TargetLocations"}
+	for i := range v {
+		if err := validateTargetLocation(&v[i]); err != nil {
 			invalidParams.AddNested(fmt.Sprintf("[%d]", i), err.(smithy.InvalidParamsError))
 		}
 	}
@@ -4507,6 +4623,11 @@ func validateOpCreateAssociationInput(v *CreateAssociationInput) error {
 	invalidParams := smithy.InvalidParamsError{Context: "CreateAssociationInput"}
 	if v.Name == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("Name"))
+	}
+	if v.TargetLocations != nil {
+		if err := validateTargetLocations(v.TargetLocations); err != nil {
+			invalidParams.AddNested("TargetLocations", err.(smithy.InvalidParamsError))
+		}
 	}
 	if v.Tags != nil {
 		if err := validateTagList(v.Tags); err != nil {
@@ -4814,6 +4935,27 @@ func validateOpDeleteResourceDataSyncInput(v *DeleteResourceDataSyncInput) error
 	invalidParams := smithy.InvalidParamsError{Context: "DeleteResourceDataSyncInput"}
 	if v.SyncName == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("SyncName"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
+func validateOpDeleteResourcePolicyInput(v *DeleteResourcePolicyInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "DeleteResourcePolicyInput"}
+	if v.ResourceArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ResourceArn"))
+	}
+	if v.PolicyId == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("PolicyId"))
+	}
+	if v.PolicyHash == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("PolicyHash"))
 	}
 	if invalidParams.Len() > 0 {
 		return invalidParams
@@ -5694,6 +5836,21 @@ func validateOpGetPatchBaselineInput(v *GetPatchBaselineInput) error {
 	}
 }
 
+func validateOpGetResourcePoliciesInput(v *GetResourcePoliciesInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "GetResourcePoliciesInput"}
+	if v.ResourceArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ResourceArn"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpGetServiceSettingInput(v *GetServiceSettingInput) error {
 	if v == nil {
 		return nil
@@ -6033,6 +6190,24 @@ func validateOpPutParameterInput(v *PutParameterInput) error {
 	}
 }
 
+func validateOpPutResourcePolicyInput(v *PutResourcePolicyInput) error {
+	if v == nil {
+		return nil
+	}
+	invalidParams := smithy.InvalidParamsError{Context: "PutResourcePolicyInput"}
+	if v.ResourceArn == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("ResourceArn"))
+	}
+	if v.Policy == nil {
+		invalidParams.Add(smithy.NewErrParamRequired("Policy"))
+	}
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	} else {
+		return nil
+	}
+}
+
 func validateOpRegisterDefaultPatchBaselineInput(v *RegisterDefaultPatchBaselineInput) error {
 	if v == nil {
 		return nil
@@ -6230,6 +6405,11 @@ func validateOpStartAutomationExecutionInput(v *StartAutomationExecutionInput) e
 	if v.DocumentName == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("DocumentName"))
 	}
+	if v.TargetLocations != nil {
+		if err := validateTargetLocations(v.TargetLocations); err != nil {
+			invalidParams.AddNested("TargetLocations", err.(smithy.InvalidParamsError))
+		}
+	}
 	if v.Tags != nil {
 		if err := validateTagList(v.Tags); err != nil {
 			invalidParams.AddNested("Tags", err.(smithy.InvalidParamsError))
@@ -6347,6 +6527,11 @@ func validateOpUpdateAssociationInput(v *UpdateAssociationInput) error {
 	invalidParams := smithy.InvalidParamsError{Context: "UpdateAssociationInput"}
 	if v.AssociationId == nil {
 		invalidParams.Add(smithy.NewErrParamRequired("AssociationId"))
+	}
+	if v.TargetLocations != nil {
+		if err := validateTargetLocations(v.TargetLocations); err != nil {
+			invalidParams.AddNested("TargetLocations", err.(smithy.InvalidParamsError))
+		}
 	}
 	if v.AlarmConfiguration != nil {
 		if err := validateAlarmConfiguration(v.AlarmConfiguration); err != nil {
