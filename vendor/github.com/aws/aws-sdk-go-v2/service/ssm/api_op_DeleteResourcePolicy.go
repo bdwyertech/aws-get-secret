@@ -6,67 +6,65 @@ import (
 	"context"
 	awsmiddleware "github.com/aws/aws-sdk-go-v2/aws/middleware"
 	"github.com/aws/aws-sdk-go-v2/aws/signer/v4"
-	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
 	"github.com/aws/smithy-go/middleware"
 	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
-// Get information about an OpsItem by using the ID. You must have permission in
-// Identity and Access Management (IAM) to view information about an OpsItem. For
-// more information, see Getting started with OpsCenter
-// (https://docs.aws.amazon.com/systems-manager/latest/userguide/OpsCenter-getting-started.html)
-// in the Amazon Web Services Systems Manager User Guide. Operations engineers and
-// IT professionals use Amazon Web Services Systems Manager OpsCenter to view,
-// investigate, and remediate operational issues impacting the performance and
-// health of their Amazon Web Services resources. For more information, see
-// OpsCenter
-// (https://docs.aws.amazon.com/systems-manager/latest/userguide/OpsCenter.html) in
-// the Amazon Web Services Systems Manager User Guide.
-func (c *Client) GetOpsItem(ctx context.Context, params *GetOpsItemInput, optFns ...func(*Options)) (*GetOpsItemOutput, error) {
+// Deletes a Systems Manager resource policy. A resource policy helps you to define
+// the IAM entity (for example, an Amazon Web Services account) that can manage
+// your Systems Manager resources. Currently, OpsItemGroup is the only resource
+// that supports Systems Manager resource policies. The resource policy for
+// OpsItemGroup enables Amazon Web Services accounts to view and interact with
+// OpsCenter operational work items (OpsItems).
+func (c *Client) DeleteResourcePolicy(ctx context.Context, params *DeleteResourcePolicyInput, optFns ...func(*Options)) (*DeleteResourcePolicyOutput, error) {
 	if params == nil {
-		params = &GetOpsItemInput{}
+		params = &DeleteResourcePolicyInput{}
 	}
 
-	result, metadata, err := c.invokeOperation(ctx, "GetOpsItem", params, optFns, c.addOperationGetOpsItemMiddlewares)
+	result, metadata, err := c.invokeOperation(ctx, "DeleteResourcePolicy", params, optFns, c.addOperationDeleteResourcePolicyMiddlewares)
 	if err != nil {
 		return nil, err
 	}
 
-	out := result.(*GetOpsItemOutput)
+	out := result.(*DeleteResourcePolicyOutput)
 	out.ResultMetadata = metadata
 	return out, nil
 }
 
-type GetOpsItemInput struct {
+type DeleteResourcePolicyInput struct {
 
-	// The ID of the OpsItem that you want to get.
+	// ID of the current policy version. The hash helps to prevent multiple calls from
+	// attempting to overwrite a policy.
 	//
 	// This member is required.
-	OpsItemId *string
+	PolicyHash *string
 
-	// The OpsItem Amazon Resource Name (ARN).
-	OpsItemArn *string
+	// The policy ID.
+	//
+	// This member is required.
+	PolicyId *string
+
+	// Amazon Resource Name (ARN) of the resource to which the policies are attached.
+	//
+	// This member is required.
+	ResourceArn *string
 
 	noSmithyDocumentSerde
 }
 
-type GetOpsItemOutput struct {
-
-	// The OpsItem.
-	OpsItem *types.OpsItem
-
+type DeleteResourcePolicyOutput struct {
 	// Metadata pertaining to the operation's result.
 	ResultMetadata middleware.Metadata
 
 	noSmithyDocumentSerde
 }
 
-func (c *Client) addOperationGetOpsItemMiddlewares(stack *middleware.Stack, options Options) (err error) {
-	err = stack.Serialize.Add(&awsAwsjson11_serializeOpGetOpsItem{}, middleware.After)
+func (c *Client) addOperationDeleteResourcePolicyMiddlewares(stack *middleware.Stack, options Options) (err error) {
+	err = stack.Serialize.Add(&awsAwsjson11_serializeOpDeleteResourcePolicy{}, middleware.After)
 	if err != nil {
 		return err
 	}
-	err = stack.Deserialize.Add(&awsAwsjson11_deserializeOpGetOpsItem{}, middleware.After)
+	err = stack.Deserialize.Add(&awsAwsjson11_deserializeOpDeleteResourcePolicy{}, middleware.After)
 	if err != nil {
 		return err
 	}
@@ -106,10 +104,10 @@ func (c *Client) addOperationGetOpsItemMiddlewares(stack *middleware.Stack, opti
 	if err = smithyhttp.AddCloseResponseBodyMiddleware(stack); err != nil {
 		return err
 	}
-	if err = addOpGetOpsItemValidationMiddleware(stack); err != nil {
+	if err = addOpDeleteResourcePolicyValidationMiddleware(stack); err != nil {
 		return err
 	}
-	if err = stack.Initialize.Add(newServiceMetadataMiddleware_opGetOpsItem(options.Region), middleware.Before); err != nil {
+	if err = stack.Initialize.Add(newServiceMetadataMiddleware_opDeleteResourcePolicy(options.Region), middleware.Before); err != nil {
 		return err
 	}
 	if err = addRequestIDRetrieverMiddleware(stack); err != nil {
@@ -124,11 +122,11 @@ func (c *Client) addOperationGetOpsItemMiddlewares(stack *middleware.Stack, opti
 	return nil
 }
 
-func newServiceMetadataMiddleware_opGetOpsItem(region string) *awsmiddleware.RegisterServiceMetadata {
+func newServiceMetadataMiddleware_opDeleteResourcePolicy(region string) *awsmiddleware.RegisterServiceMetadata {
 	return &awsmiddleware.RegisterServiceMetadata{
 		Region:        region,
 		ServiceID:     ServiceID,
 		SigningName:   "ssm",
-		OperationName: "GetOpsItem",
+		OperationName: "DeleteResourcePolicy",
 	}
 }
