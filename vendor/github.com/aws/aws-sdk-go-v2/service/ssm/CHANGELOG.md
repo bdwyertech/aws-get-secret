@@ -1,3 +1,89 @@
+# v1.36.0 (2023-03-22)
+
+* **Feature**: This Patch Manager release supports creating, updating, and deleting Patch Baselines for AmazonLinux2023, AlmaLinux.
+
+# v1.35.7 (2023-03-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.35.6 (2023-03-10)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.35.5 (2023-02-22)
+
+* **Bug Fix**: Prevent nil pointer dereference when retrieving error codes.
+* **Documentation**: Document only update for Feb 2023
+
+# v1.35.4 (2023-02-20)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.35.3 (2023-02-15)
+
+* **Announcement**: When receiving an error response in restJson-based services, an incorrect error type may have been returned based on the content of the response. This has been fixed via PR #2012 tracked in issue #1910.
+* **Bug Fix**: Correct error type parsing for restJson services.
+
+# v1.35.2 (2023-02-03)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.35.1 (2023-01-23)
+
+* No change notes available for this release.
+
+# v1.35.0 (2023-01-05)
+
+* **Feature**: Add `ErrorCodeOverride` field to all error structs (aws/smithy-go#401).
+
+# v1.34.0 (2023-01-04)
+
+* **Feature**: Adding support for QuickSetup Document Type in Systems Manager
+
+# v1.33.4 (2022-12-21)
+
+* **Documentation**: Doc-only updates for December 2022.
+
+# v1.33.3 (2022-12-15)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.2 (2022-12-02)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.33.1 (2022-11-22)
+
+* No change notes available for this release.
+
+# v1.33.0 (2022-11-16)
+
+* **Feature**: This release adds support for cross account access in CreateOpsItem, UpdateOpsItem and GetOpsItem. It introduces new APIs to setup resource policies for SSM resources: PutResourcePolicy, GetResourcePolicies and DeleteResourcePolicy.
+
+# v1.32.1 (2022-11-10)
+
+* No change notes available for this release.
+
+# v1.32.0 (2022-11-07)
+
+* **Feature**: This release includes support for applying a CloudWatch alarm to multi account multi region Systems Manager Automation
+
+# v1.31.3 (2022-10-24)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.31.2 (2022-10-21)
+
+* **Dependency Update**: Updated to the latest SDK module versions
+
+# v1.31.1 (2022-10-20)
+
+* No change notes available for this release.
+
+# v1.31.0 (2022-10-13)
+
+* **Feature**: Support of AmazonLinux2022 by Patch Manager
+
 # v1.30.0 (2022-09-26)
 
 * **Feature**: This release includes support for applying a CloudWatch alarm to Systems Manager capabilities like Automation, Run Command, State Manager, and Maintenance Windows.
