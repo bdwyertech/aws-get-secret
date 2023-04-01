@@ -43,14 +43,14 @@ type CreateAssociationInput struct {
 	// The name of the SSM Command document or Automation runbook that contains the
 	// configuration information for the managed node. You can specify Amazon Web
 	// Services-predefined documents, documents you created, or a document that is
-	// shared with you from another account. For Systems Manager documents (SSM
-	// documents) that are shared with you from other Amazon Web Services accounts, you
-	// must specify the complete SSM document ARN, in the following format:
-	// arn:partition:ssm:region:account-id:document/document-name  For example:
-	// arn:aws:ssm:us-east-2:12345678912:document/My-Shared-Document For Amazon Web
-	// Services-predefined documents and SSM documents you created in your account, you
-	// only need to specify the document name. For example, AWS-ApplyPatchBaseline or
-	// My-Document.
+	// shared with you from another Amazon Web Services account. For Systems Manager
+	// documents (SSM documents) that are shared with you from other Amazon Web
+	// Services accounts, you must specify the complete SSM document ARN, in the
+	// following format: arn:partition:ssm:region:account-id:document/document-name
+	// For example: arn:aws:ssm:us-east-2:12345678912:document/My-Shared-Document For
+	// Amazon Web Services-predefined documents and SSM documents you created in your
+	// account, you only need to specify the document name. For example,
+	// AWS-ApplyPatchBaseline or My-Document.
 	//
 	// This member is required.
 	Name *string
@@ -159,10 +159,11 @@ type CreateAssociationInput struct {
 	// associations use AUTO mode.
 	SyncCompliance types.AssociationSyncCompliance
 
-	// Optional metadata that you assign to a resource. Tags enable you to categorize a
-	// resource in different ways, such as by purpose, owner, or environment. For
-	// example, you might want to tag an association to identify the type of resource
-	// to which it applies, the environment, or the purpose of the association.
+	// Adds or overwrites one or more tags for a State Manager association. Tags are
+	// metadata that you can assign to your Amazon Web Services resources. Tags enable
+	// you to categorize your resources in different ways, for example, by purpose,
+	// owner, or environment. Each tag consists of a key and an optional value, both of
+	// which you define.
 	Tags []types.Tag
 
 	// A location is a combination of Amazon Web Services Regions and Amazon Web
