@@ -11,7 +11,7 @@ This is a simple CLI utility to retrieve a secret from AWS Parameter Store.  Som
 ```yaml
 release:
   stage: release
-  image: golang:1.14-alpine
+  image: golang:1.25-alpine
   variables:
     SECRET: '/sa-my-team-automation-acct'
     SECRET_ROLE_ARN: 'arn:aws:iam::123456789876:role/sa-automation-cred-retrieval'
@@ -20,7 +20,7 @@ release:
     - > # Setup aws-get-secret
       if [ ! -f .cache/aws-get-secret ]; then
         mkdir -p ${CI_PROJECT_DIR}/.cache
-        wget -qO- https://github.com/bdwyertech/aws-get-secret/releases/download/v0.0.3/aws-get-secret_linux_amd64.tar.gz | tar zxf - --directory .cache
+        wget -qO- https://github.com/bdwyertech/aws-get-secret/releases/download/v0.0.20/aws-get-secret_linux_amd64.tar.gz | tar zxf - --directory .cache
       fi
       && /bin/ln -sfn ${CI_PROJECT_DIR}/.cache/aws-get-secret /usr/local/bin/aws-get-secret
   script:
