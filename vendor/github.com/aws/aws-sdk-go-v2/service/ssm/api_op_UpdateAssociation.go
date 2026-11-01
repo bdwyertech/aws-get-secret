@@ -4,11 +4,10 @@ package ssm
 
 import (
 	"context"
-	"fmt"
-	awsmiddleware "github.com/aws/aws-sdk-go-v2/aws/middleware"
+	"github.com/aws/aws-sdk-go-v2/service/ssm/schemas"
 	"github.com/aws/aws-sdk-go-v2/service/ssm/types"
+	smithy "github.com/aws/smithy-go"
 	"github.com/aws/smithy-go/middleware"
-	smithyhttp "github.com/aws/smithy-go/transport/http"
 )
 
 // Updates an association. You can update the association name and version, the
@@ -84,6 +83,21 @@ type UpdateAssociationInput struct {
 	// [Understanding when associations are applied to resources]: https://docs.aws.amazon.com/systems-manager/latest/userguide/state-manager-about.html#state-manager-about-scheduling
 	// [About target updates with Automation runbooks]: https://docs.aws.amazon.com/systems-manager/latest/userguide/state-manager-about.html#runbook-target-updates
 	ApplyOnlyAtCronInterval bool
+
+	// A role used by association to take actions on your behalf. State Manager will
+	// assume this role and call required APIs when dispatching configurations to
+	// nodes. If not specified, [service-linked role for Systems Manager]will be used by default.
+	//
+	// It is recommended that you define a custom IAM role so that you have full
+	// control of the permissions that State Manager has when taking actions on your
+	// behalf.
+	//
+	// Service-linked role support in State Manager is being phased out. Associations
+	// relying on service-linked role may require updates in the future to continue
+	// functioning properly.
+	//
+	// [service-linked role for Systems Manager]: https://docs.aws.amazon.com/systems-manager/latest/userguide/using-service-linked-roles.html
+	AssociationDispatchAssumeRole *string
 
 	// The name of the association that you want to update.
 	AssociationName *string
@@ -227,7 +241,8 @@ type UpdateAssociationInput struct {
 	// Services accounts where you want to run the association. Use this action to
 	// update an association in multiple Regions and multiple accounts.
 	//
-	// The IncludeChildOrganizationUnits parameter is not supported by State Manager.
+	// The TargetLocationAlarmConfiguration parameter is not supported by State
+	// Manager.
 	TargetLocations []types.TargetLocation
 
 	// A key-value mapping of document parameters to target resources. Both Targets
@@ -238,6 +253,75 @@ type UpdateAssociationInput struct {
 	Targets []types.Target
 
 	noSmithyDocumentSerde
+}
+
+func (v *UpdateAssociationInput) Serialize(s smithy.ShapeSerializer) {
+	s.WriteStruct(schemas.UpdateAssociationRequest)
+	v.SerializeMembers(s)
+	s.CloseStruct()
+}
+
+func (v *UpdateAssociationInput) SerializeMembers(s smithy.ShapeSerializer) {
+	if v.AlarmConfiguration != nil {
+		s.WriteStruct(schemas.UpdateAssociationRequest_AlarmConfiguration)
+		v.AlarmConfiguration.SerializeMembers(s)
+		s.CloseStruct()
+	}
+	if v.ApplyOnlyAtCronInterval != false {
+		s.WriteBool(schemas.UpdateAssociationRequest_ApplyOnlyAtCronInterval, v.ApplyOnlyAtCronInterval)
+	}
+	if v.AssociationDispatchAssumeRole != nil {
+		s.WriteString(schemas.UpdateAssociationRequest_AssociationDispatchAssumeRole, *v.AssociationDispatchAssumeRole)
+	}
+	if v.AssociationId != nil {
+		s.WriteString(schemas.UpdateAssociationRequest_AssociationId, *v.AssociationId)
+	}
+	if v.AssociationName != nil {
+		s.WriteString(schemas.UpdateAssociationRequest_AssociationName, *v.AssociationName)
+	}
+	if v.AssociationVersion != nil {
+		s.WriteString(schemas.UpdateAssociationRequest_AssociationVersion, *v.AssociationVersion)
+	}
+	if v.AutomationTargetParameterName != nil {
+		s.WriteString(schemas.UpdateAssociationRequest_AutomationTargetParameterName, *v.AutomationTargetParameterName)
+	}
+	serializeCalendarNameOrARNList(s, schemas.UpdateAssociationRequest_CalendarNames, v.CalendarNames)
+	if v.ComplianceSeverity != "" {
+		s.WriteString(schemas.UpdateAssociationRequest_ComplianceSeverity, string(v.ComplianceSeverity))
+	}
+	if v.DocumentVersion != nil {
+		s.WriteString(schemas.UpdateAssociationRequest_DocumentVersion, *v.DocumentVersion)
+	}
+	if v.Duration != nil {
+		s.WriteInt32(schemas.UpdateAssociationRequest_Duration, *v.Duration)
+	}
+	if v.MaxConcurrency != nil {
+		s.WriteString(schemas.UpdateAssociationRequest_MaxConcurrency, *v.MaxConcurrency)
+	}
+	if v.MaxErrors != nil {
+		s.WriteString(schemas.UpdateAssociationRequest_MaxErrors, *v.MaxErrors)
+	}
+	if v.Name != nil {
+		s.WriteString(schemas.UpdateAssociationRequest_Name, *v.Name)
+	}
+	if v.OutputLocation != nil {
+		s.WriteStruct(schemas.UpdateAssociationRequest_OutputLocation)
+		v.OutputLocation.SerializeMembers(s)
+		s.CloseStruct()
+	}
+	serializeParameters(s, schemas.UpdateAssociationRequest_Parameters, v.Parameters)
+	if v.ScheduleExpression != nil {
+		s.WriteString(schemas.UpdateAssociationRequest_ScheduleExpression, *v.ScheduleExpression)
+	}
+	if v.ScheduleOffset != nil {
+		s.WriteInt32(schemas.UpdateAssociationRequest_ScheduleOffset, *v.ScheduleOffset)
+	}
+	if v.SyncCompliance != "" {
+		s.WriteString(schemas.UpdateAssociationRequest_SyncCompliance, string(v.SyncCompliance))
+	}
+	serializeTargetLocations(s, schemas.UpdateAssociationRequest_TargetLocations, v.TargetLocations)
+	serializeTargetMaps(s, schemas.UpdateAssociationRequest_TargetMaps, v.TargetMaps)
+	serializeTargets(s, schemas.UpdateAssociationRequest_Targets, v.Targets)
 }
 
 type UpdateAssociationOutput struct {
@@ -251,80 +335,50 @@ type UpdateAssociationOutput struct {
 	noSmithyDocumentSerde
 }
 
+func (v *UpdateAssociationOutput) Serialize(s smithy.ShapeSerializer) {
+	s.WriteStruct(schemas.UpdateAssociationResult)
+	v.SerializeMembers(s)
+	s.CloseStruct()
+}
+
+func (v *UpdateAssociationOutput) SerializeMembers(s smithy.ShapeSerializer) {
+	if v.AssociationDescription != nil {
+		s.WriteStruct(schemas.UpdateAssociationResult_AssociationDescription)
+		v.AssociationDescription.SerializeMembers(s)
+		s.CloseStruct()
+	}
+}
+func (v *UpdateAssociationOutput) Deserialize(d smithy.ShapeDeserializer) error {
+	return smithy.ReadStruct(d, schemas.UpdateAssociationResult, func(s *smithy.Schema) error {
+		switch s {
+		case schemas.UpdateAssociationResult_AssociationDescription:
+			v.AssociationDescription = &types.AssociationDescription{}
+			return v.AssociationDescription.Deserialize(d)
+		}
+		return nil
+	})
+}
 func (c *Client) addOperationUpdateAssociationMiddlewares(stack *middleware.Stack, options Options) (err error) {
-	if err := stack.Serialize.Add(&setOperationInputMiddleware{}, middleware.After); err != nil {
+	if err := stack.Serialize.Add(&serializeRequestMiddleware{options: &options, operationSchema: smithy.NewOperationSchema(schemas.UpdateAssociation, schemas.UpdateAssociationRequest, schemas.UpdateAssociationResult)}, middleware.After); err != nil {
 		return err
 	}
-	err = stack.Serialize.Add(&awsAwsjson11_serializeOpUpdateAssociation{}, middleware.After)
-	if err != nil {
+	if err := stack.Deserialize.Add(&deserializeResponseMiddleware{options: &options, operationSchema: smithy.NewOperationSchema(schemas.UpdateAssociation, schemas.UpdateAssociationRequest, schemas.UpdateAssociationResult), output: &UpdateAssociationOutput{}}, middleware.After); err != nil {
 		return err
-	}
-	err = stack.Deserialize.Add(&awsAwsjson11_deserializeOpUpdateAssociation{}, middleware.After)
-	if err != nil {
-		return err
-	}
-	if err := addProtocolFinalizerMiddlewares(stack, options, "UpdateAssociation"); err != nil {
-		return fmt.Errorf("add protocol finalizers: %v", err)
 	}
 
-	if err = addlegacyEndpointContextSetter(stack, options); err != nil {
-		return err
-	}
-	if err = addSetLoggerMiddleware(stack, options); err != nil {
-		return err
-	}
-	if err = addClientRequestID(stack); err != nil {
-		return err
-	}
-	if err = addComputeContentLength(stack); err != nil {
-		return err
-	}
 	if err = addResolveEndpointMiddleware(stack, options); err != nil {
 		return err
 	}
 	if err = addComputePayloadSHA256(stack); err != nil {
 		return err
 	}
-	if err = addRetry(stack, options); err != nil {
-		return err
-	}
-	if err = addRawResponseToMetadata(stack); err != nil {
-		return err
-	}
-	if err = addRecordResponseTiming(stack); err != nil {
-		return err
-	}
-	if err = addSpanRetryLoop(stack, options); err != nil {
-		return err
-	}
-	if err = addClientUserAgent(stack, options); err != nil {
-		return err
-	}
-	if err = smithyhttp.AddErrorCloseResponseBodyMiddleware(stack); err != nil {
-		return err
-	}
-	if err = smithyhttp.AddCloseResponseBodyMiddleware(stack); err != nil {
-		return err
-	}
-	if err = addSetLegacyContextSigningOptionsMiddleware(stack); err != nil {
-		return err
-	}
-	if err = addTimeOffsetBuild(stack, c); err != nil {
-		return err
-	}
-	if err = addUserAgentRetryMode(stack, options); err != nil {
+	if err = addRecordResponseTiming(stack, options); err != nil {
 		return err
 	}
 	if err = addCredentialSource(stack, options); err != nil {
 		return err
 	}
 	if err = addOpUpdateAssociationValidationMiddleware(stack); err != nil {
-		return err
-	}
-	if err = stack.Initialize.Add(newServiceMetadataMiddleware_opUpdateAssociation(options.Region), middleware.Before); err != nil {
-		return err
-	}
-	if err = addRecursionDetection(stack); err != nil {
 		return err
 	}
 	if err = addRequestIDRetrieverMiddleware(stack); err != nil {
@@ -339,22 +393,8 @@ func (c *Client) addOperationUpdateAssociationMiddlewares(stack *middleware.Stac
 	if err = addDisableHTTPSMiddleware(stack, options); err != nil {
 		return err
 	}
-	if err = addInterceptBeforeRetryLoop(stack, options); err != nil {
-		return err
-	}
-	if err = addInterceptAttempt(stack, options); err != nil {
-		return err
-	}
 	if err = addInterceptors(stack, options); err != nil {
 		return err
 	}
 	return nil
-}
-
-func newServiceMetadataMiddleware_opUpdateAssociation(region string) *awsmiddleware.RegisterServiceMetadata {
-	return &awsmiddleware.RegisterServiceMetadata{
-		Region:        region,
-		ServiceID:     ServiceID,
-		OperationName: "UpdateAssociation",
-	}
 }
